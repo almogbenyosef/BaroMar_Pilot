@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>BaroMar Cyprus Pilot — 3D</title>
+  <meta name="description" content="Interactive 3D model of BaroMar's underwater compressed-air energy storage pilot at Proteas, Cyprus.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three/three.module.js", "three/addons/": "./vendor/three/addons/" } }
+  </script>
+</head>
+<body>
+  <div id="scene" aria-label="3D model of the pilot"></div>
+  <div id="labels"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#" data-goto="overview" aria-label="BaroMar — back to overview">
+      <img src="assets/img/logo.png" alt="BaroMar">
+    </a>
+    <div class="title">
+      <h1>Cyprus Pilot</h1>
+      <p>Underwater compressed-air energy storage · Proteas</p>
+    </div>
+    <div class="top-actions">
+      <button class="btn ghost" id="btn-how" type="button">How it works</button>
+      <button class="btn ghost icon" id="btn-about" type="button" aria-label="About and sources">i</button>
+    </div>
+  </header>
+
+  <nav class="rail" id="rail" aria-label="Parts of the system"></nav>
+
+  <aside class="panel" id="panel" aria-live="polite">
+    <button class="panel-close" id="panel-close" type="button" aria-label="Close panel">×</button>
+    <div class="panel-body" id="panel-body"></div>
+  </aside>
+
+  <section class="gauge" id="gauge" aria-label="Depth and water pressure at the focus point">
+    <div class="gauge-track"><div class="gauge-fill" id="gauge-fill"></div><div class="gauge-mark" id="gauge-mark"></div></div>
+    <div class="gauge-read">
+      <span class="g-depth" id="g-depth">0 m</span>
+      <span class="g-press" id="g-press">1.0 bar</span>
+    </div>
+  </section>
+
+  <section class="minimap" id="minimap">
+    <div class="minimap-head">
+      <span>Site map</span>
+      <button type="button" class="mini-toggle" id="mini-toggle" aria-expanded="true" aria-label="Hide map">–</button>
+    </div>
+    <div id="map"></div>
+  </section>
+
+  <section class="process-bar" id="process-bar" aria-label="Simulate the storage cycle">
+    <div class="seg" role="radiogroup" aria-label="Operating mode">
+      <button type="button" role="radio" data-mode="charge" aria-checked="false">Charge</button>
+      <button type="button" role="radio" data-mode="hold" aria-checked="false">Store</button>
+      <button type="button" role="radio" data-mode="generate" aria-checked="false">Generate</button>
+    </div>
+    <div class="soc" title="Air stored in the tanks">
+      <div class="soc-bar"><div class="soc-fill" id="soc-fill"></div></div>
+      <span id="soc-label">Tanks 40% full</span>
+    </div>
+    <button type="button" class="btn ghost small" id="btn-cycle">Play full cycle</button>
+  </section>
+
+  <div class="modal" id="how" role="dialog" aria-modal="true" aria-labelledby="how-title" hidden>
+    <div class="modal-card how-card">
+      <button class="modal-close" type="button" data-close aria-label="Close">×</button>
+      <h2 id="how-title">How the pilot stores energy</h2>
+      <div class="how-tabs" role="tablist">
+        <button role="tab" data-step="charge" aria-selected="true">Charge</button>
+        <button role="tab" data-step="hold" aria-selected="false">Store</button>
+        <button role="tab" data-step="generate" aria-selected="false">Generate</button>
+      </div>
+      <div class="how-grid">
+        <div class="how-svg" id="how-svg"></div>
+        <div class="how-text" id="how-text"></div>
+      </div>
+      <div class="how-foot">
+        <button class="btn" type="button" id="how-run">Show this in 3D</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="about" role="dialog" aria-modal="true" aria-labelledby="about-title" hidden>
+    <div class="modal-card about-card">
+      <button class="modal-close" type="button" data-close aria-label="Close">×</button>
+      <div id="about-body"></div>
+    </div>
+  </div>
+
+  <div class="lightbox" id="lightbox" hidden><img alt=""><p></p><button type="button" aria-label="Close">×</button></div>
+
+  <div class="loader" id="loader"><img src="assets/img/logo.png" alt=""><div class="loader-bar"><span id="loader-fill"></span></div><p id="loader-text">Loading the seabed…</p></div>
+
+  <noscript><p class="nojs">This page needs JavaScript and WebGL to show the 3D model.</p></noscript>
+
+  <script src="vendor/leaflet/leaflet.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
