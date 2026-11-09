@@ -1,181 +1,190 @@
 // All visible text and key figures live here, so they can be edited without touching the 3D code.
-// Figures come from "BaroMar Intro Snapshot, Nov 2026" (investor material, confidential) and the
-// Leonardo Stadler Rev.05 tank drawings. Edit here if the approved numbers change.
+// Copy: "BaroMar Cyprus Pilot 3D — Revised Website Copy", 9 Nov 2026. The keys in the comments
+// (overview.lead, ui.takeApart …) match the "Cyprus Pilot 3D – site texts" doc.
+// Copy rules: no manufacturers, model numbers or detailed specs; the process is "isobaric";
+// featured figures stay 400 kWh / 300 kW / 700 m³ (one reference storage unit).
 
 export const SITE = {
-  title: 'Cyprus Pilot',
-  subtitle: 'Underwater compressed-air energy storage at Proteas, Cyprus',
+  title: 'Altum Mare-UWCAES Pilot Cyprus',
+  subtitle: 'Isobaric, adiabatic underwater compressed-air energy storage · PROTEAS, Cyprus',
   confidential: 'Confidential & proprietary. Prepared for investors under NDA.',
   // Engineering model of the shore station (GLB, metres, Y up, origin at the pad centre).
-  // Leave empty to show the simplified model. Example: 'assets/models/shore_station.glb'
-  stationModel: '',
+  stationModel: '',   // empty = assets/models/shore_station.glb
 };
 
 export const KEY_FIGURES = [
   { value: '400', unit: 'kWh', label: 'Energy capacity' },
-  { value: '300', unit: 'kW', label: 'Max power output' },
-  { value: '700', unit: 'm³', label: 'Underwater air volume' },
-  { value: '100', unit: 'm', label: 'Deployment depth' },
-  { value: '6', unit: 'km', label: 'Subsea pipeline' },
-  { value: '10', unit: 'm³', label: 'Thermal energy storage' },
-  { value: '500', unit: 'm²', label: 'Onshore facility' },
+  { value: '300', unit: 'kW', label: 'Maximum power output' },
+  { value: '700', unit: 'm³', label: 'Underwater air-storage volume' },
+  { value: '100', unit: 'm', label: 'Storage depth' },
+  { value: '6', unit: 'km', label: 'Subsea Air Pipeline' },
+  { value: '10', unit: 'm³', label: 'Hot-water thermal storage' },
+  { value: '500', unit: 'm²', label: 'Shore Station footprint' },
   { value: 'Q1', unit: '2027', label: 'Pilot readiness target' },
 ];
 
+// Photos: each chapter (and each station component) takes an optional list of real photos,
+//   images: [{ src: 'assets/img/<file>.jpg', caption: '…' }]
+// shown under its text. Left empty for now; the 3D model carries the story until site photos are ready.
 // The order follows the path the air takes: from the grid, through the shore station,
 // across the shoreline, along the seabed, into the tanks.
 export const PARTS = [
   {
     id: 'overview',
     rail: 'Pilot overview',
-    title: 'BaroMar Cyprus pilot',
-    lead: 'A first-of-a-kind, grid-to-grid demonstration of underwater compressed-air energy storage (UW-CAES), built next to the Cyprus Institute’s PROTEAS research facility near Pentakomo.',
+    title: 'Altum Mare-UWCAES Pilot Cyprus',
+    lead: 'A first-of-its-kind demonstration of underwater compressed-air energy storage, being developed at The Cyprus Institute’s PROTEAS research facility near Pentakomo, Cyprus.',
     body: [
-      'Surplus electricity runs a compressor on shore. The compressed air travels through a pipeline along the seabed and is stored in rigid tanks 100 m down, where the weight of the sea keeps it at a steady pressure. When power is needed, the air flows back, is reheated, and drives a turboexpander-generator.',
-      'The pilot is the minimum viable product that validates the full cycle — thermodynamics, subsea deployment and end-to-end operation — before commercial scale-up.',
+      'When electricity is available, the Shore Station compresses air and captures the heat produced in the process. The air travels through a pipeline along the seabed to underwater storage. When electricity is needed, the sea pushes the stored air back toward shore. The captured heat warms the returning air before it drives a generator and sends electricity back to the grid.',
+      'The cycle is isobaric and adiabatic: the sea holds the stored air at a constant pressure, and the heat of compression is kept and returned to the air rather than wasted.',
+      'The pilot is designed to demonstrate the complete energy-storage cycle in a real marine environment, bringing together established power and marine technologies as a foundation for larger commercial systems.',
     ],
     figures: true,
-    images: [
-      { src: 'assets/img/station_render.jpg', caption: 'Shore station, design render' },
-      { src: 'assets/img/site_location.jpg', caption: 'Pilot location at PROTEAS' },
-    ],
+    images: [],
     view: 'overview',
   },
   {
     id: 'station',
-    rail: 'Shore station',
-    title: 'Shore station',
-    lead: 'All moving machinery sits on land, on a ~500 m² pad where it can be serviced. Nothing underwater has moving parts.',
+    rail: 'Shore Station',
+    title: 'Shore Station',
+    lead: 'The Shore Station brings together the equipment that converts electricity into compressed air and back into electricity. Keeping the main machinery on land makes the system accessible for operation and maintenance.',
     body: [
-      'The station holds the compressor, the thermal energy storage that keeps the heat of compression, the two-stage turboexpander-generator, cooling, and the control room that connects the system to the grid.',
-      'The 3D model shown here is a simplified layout based on the design render. It will be replaced with the current engineering model.',
+      'During charging, the compressor uses electricity to compress air, while heat from the process is captured and stored in hot water. During generation, the returning air is reheated using this stored heat and drives the Turboexpander-Generator, producing electricity for the grid. Keeping and reusing the heat is what makes the cycle adiabatic.',
+      'Select Charge or Generate to follow the flow of air (white), hot water (red), cooling water (blue) and electricity (yellow) through the station. The 3D model is a simplified illustration of the planned system.',
     ],
-    stats: [['Footprint', '~500 m²'], ['Max output', '300 kW'], ['Heat store', '10 m³']],
-    images: [{ src: 'assets/img/station_render.jpg', caption: 'Design render of the shore station' }],
-    children: ['compressor', 'tes', 'teg', 'cooling', 'control'],
+    stats: [['Footprint', 'approximately 500 m²'], ['Maximum power output', '300 kW'], ['Hot-water storage', '10 m³'], ['Grid connection', 'electricity in and out']],
+    images: [],
+    children: ['compressor', 'dryer', 'hx', 'teg', 'tes', 'coldTank', 'cooling', 'electrical', 'control', 'substation', 'cable'],
     view: 'station',
   },
   {
     id: 'landfall',
-    rail: 'Landfall',
-    title: 'Landfall at White Rocks',
-    lead: 'The pipeline leaves the station, crosses the coastal road in a protected crossing and enters the sea at a rocky point south of PROTEAS.',
+    rail: 'Pipeline Landfall',
+    title: 'Pipeline Landfall',
+    lead: 'A buried air pipeline connects the Shore Station to the coastline, where the onshore system meets the Subsea Air Pipeline.',
     body: [
-      'On land the pipe is buried in a shallow trench. At the shoreline it is protected against waves and scour before it continues down the slope.',
+      'The pipeline runs underground from the station toward the sea. At the Landfall Manhole, the onshore and offshore sections connect, creating a continuous air route between the Shore Station and the underwater storage site.',
     ],
-    stats: [['Shore to station', '~230 m'], ['Entry point', '34.7059° N, 33.2590° E']],
-    images: [
-      { src: 'assets/img/site_landfall.jpg', caption: 'Planned pipe entry point (red arrow)' },
-      { src: 'assets/img/pipe_entry.jpg', caption: 'Shoreline at the entry point' },
-    ],
+    stats: [['Onshore connection', 'buried air pipeline'], ['Transition point', 'Landfall Manhole']],
+    images: [],
     view: 'landfall',
   },
   {
     id: 'pipeline',
-    rail: 'Subsea pipeline',
-    title: 'Subsea pipeline',
-    lead: 'A single air line runs about 6 km along the seabed, from the shoreline down to the storage site at 100 m depth.',
+    rail: 'Subsea Air Pipeline',
+    title: 'Subsea Air Pipeline',
+    lead: 'The Subsea Air Pipeline connects the Shore Station to the underwater storage site, approximately 6 km offshore at a depth of around 100 m.',
     body: [
-      'The route follows the licensed marine corridor approved in the 2025 compatibility permit, avoiding steep features found in the multibeam survey. Scour protection holds the pipe in place in the shallow zone.',
-      'The pipe is drawn much thicker than it is so it can be seen at this scale.',
+      'The same pipeline carries compressed air in both directions: toward the storage units during charging and back to shore during generation. Its route has been designed around the surveyed seabed and local marine conditions.',
+      'Concrete ballast blocks help keep the pipeline securely positioned along the seabed, including areas closer to shore where additional protection is needed.',
+      'The pipeline is drawn thicker than its actual size so it remains visible in the 3D view. The underwater terrain is also vertically exaggerated to help illustrate the route.',
     ],
-    stats: [['Route length', '~5.7 km (survey route)'], ['Start depth', '0 m'], ['End depth', '~100 m']],
+    stats: [['Function', 'air transfer in both directions'], ['Route length', 'approximately 6 km'], ['Route', 'along the seabed'], ['Storage depth', 'approximately 100 m'], ['Seabed support', 'concrete ballast']],
     view: 'pipeline',
   },
   {
     id: 'tanks',
-    rail: 'Storage tanks',
-    title: 'Underwater storage tanks',
-    lead: 'Fourteen steel tubes stand on a ballasted concrete slab on the seabed, about 100 m down. Together they hold roughly 700 m³ of air.',
+    rail: 'Underwater Storage',
+    title: 'Underwater Storage Units',
+    lead: 'Each Underwater Storage Unit consists of 14 vertical Steel Air-Storage Tanks mounted on a Concrete Base Slab and secured by Rock Ballast. One unit provides approximately 700 m³ of underwater air-storage volume.',
     body: [
-      'The tubes are open to the sea at the bottom. Air pumped in from the top pushes the water out; when air is drawn back, the sea flows in again. Because the sea pressure at 100 m is constant, the air stays at almost the same pressure throughout — which keeps the machinery on shore running at its best point.',
-      'Ballast cages filled with rock and the concrete slab hold the structure down against the buoyancy of the stored air.',
+      'During charging, compressed air enters the tanks from above and displaces seawater through their open bottoms. During generation, the surrounding sea pushes the air back toward shore as water flows into the tanks. The natural pressure of the sea enables BaroMar’s isobaric storage process, without moving machinery underwater.',
+      'Rock Ballast keeps the Storage Unit stable on the seabed. The structure may also provide surfaces for marine life over time, depending on local conditions. The interactive model starts with one Storage Unit and lets you add two more to explore a three-unit configuration.',
     ],
-    stats: [['Tubes', '14 × Ø2.5 m × 10.4 m'], ['Air volume', '~700 m³'], ['Slab', '14.3 × 13.4 m octagon'], ['Water pressure', '~11 bar']],
-    images: [
-      { src: 'assets/img/tank_drawing.jpg', caption: 'Structure, Leonardo Stadler Rev.05 drawings' },
-      { src: 'assets/img/tank_concept.jpg', caption: 'Earlier concept render' },
-    ],
+    stats: [['Configuration', '14 Steel Air-Storage Tanks per unit'], ['Air-storage volume', 'approximately 700 m³ per unit'], ['Foundation', 'Concrete Base Slab'], ['Storage principle', 'Isobaric']],
+    images: [],
     tankToggle: true,
     view: 'tanks',
   },
-  {
-    id: 'seabed',
-    rail: 'Seabed survey',
-    title: 'Seabed and survey',
-    lead: 'The seabed shape comes from the multibeam (MBES) survey of the corridor, extended to the coast with a smooth model.',
-    body: [
-      'The seabed slopes gently from the shore to about 60 m, then more steeply to about 100 m at the tank site. Turn on the survey layer to see the original colour-coded depth map.',
-      'Depth is exaggerated three times so the slope is easy to read.',
-    ],
-    stats: [['Survey', 'MBES, Survey area B–C'], ['Depth range', '0 – 105 m'], ['Vertical scale', '×3']],
-    surveyToggle: true,
-    view: 'seabed',
-  },
 ];
 
-// Sub-parts of the shore station (shown as labels when you zoom in).
+// Sub-parts of the shore station (labels on the model; clicking one opens its panel).
 export const STATION_PARTS = {
-  compressor: {
-    title: 'Compressor',
-    text: 'Electric compressors take surplus electricity from the grid and squeeze air to about 11 bar — the pressure of the sea at the tank depth.',
-  },
-  tes: {
-    title: 'Thermal energy storage',
-    text: 'Compressing air makes it hot. Heat exchangers move that heat into insulated water tanks (10 m³) so it can be given back to the air before expansion. This is what lets the cycle approach adiabatic efficiency.',
-  },
-  teg: {
-    title: 'Turboexpander-generator',
-    text: 'On discharge, the stored air is reheated and expanded through a two-stage turboexpander that turns a generator, feeding up to 300 kW back to the grid.',
-  },
-  cooling: {
-    title: 'Cooling',
-    text: 'A cooling tower and cold-water tank remove the heat that is not stored, keeping air and equipment at working temperature.',
-  },
-  control: {
-    title: 'Control room and grid connection',
-    text: 'The control room runs the charge and discharge sequences and connects the station to the grid through the local substation.',
-  },
+  compressor: { title: 'Air Compressor', tag: 'Electricity to compressed air', text: 'The compressor uses electricity from the grid to pressurize air before it travels to the underwater storage site. The heat created during compression is captured for later use.' },
+  dryer: { title: 'Air Separator and Dryer', tag: 'Air preparation', text: 'Before the compressed air enters the pipeline, the separator and dryer reduce moisture in the air stream, helping protect the equipment and piping.' },
+  hx: { title: 'Heat Exchangers', tag: 'Heat recovery and reuse', text: 'Heat exchangers move heat between the compressed air and the water circuit. They capture heat during charging and use stored heat to warm the returning air during generation.' },
+  teg: { title: 'Turboexpander-Generator', tag: 'Compressed air to electricity', text: 'When electricity is needed, warm compressed air expands through the turbine and drives the generator. The system is designed for approximately 250 kW of nominal power generation, with peak output of up to 300 kW.' },
+  tes: { title: 'Thermal Storage', tag: 'Recovered heat storage', text: 'Heat recovered during air compression is stored in an insulated hot-water tank. When power is generated, this heat is transferred back to the air before it expands through the turbine.' },
+  coldTank: { title: 'Cold-Water Tank', tag: 'Water circulation', text: 'The cold-water tank supports the station’s water circuit, allowing water to circulate as heat is captured, stored and reused during the energy-storage cycle.' },
+  cooling: { title: 'Cooling System', tag: 'Temperature management', text: 'The cooling system helps regulate operating temperatures and removes heat that is not transferred into thermal storage.' },
+  substation: { title: 'Grid Connection', tag: 'Electricity in and out', text: 'The grid connection supplies electricity to the Shore Station during charging and receives electricity from the generator during discharge.' },
+  cable: { title: 'Grid Power Cable', tag: 'Buried connection', text: 'A buried cable links the grid connection to the Shore Station’s electrical room, bringing electricity in during charging and sending it back to the grid during generation.' },
+  electrical: { title: 'Electrical Room', tag: 'Power and control', text: 'The electrical room contains the systems that distribute electricity, manage equipment power and support operation of the pilot.' },
+  control: { title: 'Control Room', tag: 'System operation', text: 'From the control room, operators monitor and manage charging, storage and generation across the shore and underwater systems.' },
 };
 
 // Process explainer (the "How it works" view and the 3D charge / generate simulation).
 export const PROCESS = {
   charge: {
     title: 'Charge',
-    when: 'When electricity is cheap or renewable output is curtailed',
+    when: 'When electricity is available for storage',
     steps: [
-      'Surplus electricity drives the compressor on shore.',
-      'Heat of compression is captured and stored in the thermal storage.',
-      'Cooled, compressed air flows 6 km through the subsea pipeline.',
-      'Air fills the tubes from the top and pushes seawater out at the bottom.',
+      'Electricity from the grid powers the compressor at the Shore Station.',
+      'Heat created during compression is captured and stored in hot water for later use, rather than wasted.',
+      'Compressed air travels through the Subsea Air Pipeline toward the underwater storage site.',
+      'Air enters the Steel Air-Storage Tanks, pushing seawater out through their open bottoms.',
     ],
   },
   hold: {
     title: 'Store',
-    when: 'Between charge and discharge, for hours',
+    when: 'Until electricity is needed',
     steps: [
-      'Air sits in the tubes at ~11 bar, held by the weight of 100 m of sea.',
-      'Heat waits in the insulated thermal storage on shore.',
-      'Nothing moves underwater; the ballast holds the structure on the seabed.',
+      'Compressed air remains underwater, stored using the natural pressure of the sea.',
+      'Recovered heat is kept in the Thermal Storage system at the Shore Station.',
+      'The Underwater Storage Units stay securely in place on the seabed, with no moving mechanical parts.',
     ],
   },
   generate: {
     title: 'Generate',
-    when: 'When the grid needs power',
+    when: 'When electricity is needed',
     steps: [
-      'Valves open and the sea pushes the air back up the pipeline.',
-      'Stored heat warms the air again.',
-      'The air expands through the turboexpander, which turns the generator.',
-      'Electricity flows back to the grid as seawater refills the tubes.',
+      'The surrounding sea pushes the stored air back through the pipeline toward shore.',
+      'Heat previously stored in hot water is transferred back to the returning air.',
+      'The warmed air expands through the turbine, driving the generator.',
+      'Electricity flows back to the grid as seawater returns into the underwater tanks.',
     ],
   },
+};
+
+// Labels inside the animated "How it works" drawing (svg.*)
+export const DIAGRAM = {
+  grid: 'Electricity grid', compressor: 'Compressor', teg: 'Turboexpander-Generator', hx: 'Heat exchanger', store: 'Thermal Storage',
+  sea: 'Sea level', pipe: 'Subsea Air Pipeline — approximately 6 km', tubes: 'Air-Storage Tanks', depth: 'Approximately 100 m underwater',
 };
 
 export const ABOUT = {
   title: 'About BaroMar',
   text: [
-    'BaroMar has developed a patented underwater compressed-air energy storage solution for large-scale, long-duration storage. Air is stored in rigid tanks ballasted on the seabed, using the hydrostatic pressure of the sea and mature power, energy and marine technology.',
-    'Commercial systems are designed to scale to more than 100 MW and 8 hours of storage, with a target round-trip efficiency of about 70%, no geological constraints, no moving parts underwater and no critical raw materials.',
+    'BaroMar has developed a patented isobaric and adiabatic underwater compressed-air energy storage solution designed for large-scale, long-duration electricity storage. By using the natural pressure of the sea, the technology stores compressed air in underwater structures at constant pressure, while the heat of compression is stored on land and returned to the air on discharge.',
+    'The solution is designed to scale with energy-storage needs, without relying on underground geological caverns or conventional battery materials. With no moving machinery underwater, it combines established marine infrastructure with power-generation and thermal-storage technologies.',
   ],
-  credits: 'Bathymetry: Proteas MBES survey (2023). Tank structure: Leonardo Stadler Coastal & Harbour Engineering, Rev.05. Coastline © OpenStreetMap contributors. Satellite imagery © Esri, Maxar, Earthstar Geographics.',
+  credits: 'Bathymetry: PROTEAS MBES survey (2023). Underwater Storage Unit design: Leonardo Stadler Coastal & Harbour Engineering. Shore Station: BaroMar engineering 3D model, including Boris Sola’s design work. Land elevation: EU-DEM v1.1 (Copernicus). Coastline © OpenStreetMap contributors. Satellite imagery © Esri, Maxar, Earthstar Geographics.',
+  note: 'The 3D visualization is illustrative. Underwater depth is vertically exaggerated, and the pipeline is shown thicker than its actual dimensions to make the system easier to understand.',
+};
+
+// Interface labels (ui.*, pin.*, explode.*, load.*)
+export const UI = {
+  menuHeading: 'Explore the system',
+  howButton: 'How it works',
+  howTitle: 'How BaroMar stores energy',
+  howRun: 'Explore in 3D',
+  siteMap: 'Pilot location',
+  playCycle: 'Play full cycle',
+  stopCycle: 'Stop',
+  tanksFull: (n) => `Air storage ${n}% full`,
+  builtHeading: 'How it is built',
+  takeApart: 'Take it apart',
+  putBack: 'Put it back together',
+  stationExplodeNote: 'Explore how the main equipment, piping and supporting structure fit together inside the Shore Station.',
+  tankExplodeNote: 'Explore the main layers of one Storage Unit, including the Concrete Base Slab, Rock Ballast, Steel Air-Storage Tanks and air distribution system.',
+  componentNote: 'A simplified 3D illustration of the planned Shore Station equipment and layout.',
+  tankShow: 'Show',
+  oneStructure: 'Show 1 Storage Unit',
+  threeStructures: 'Add 2 Storage Units',
+  tankLayoutNote: 'The reference view shows one Underwater Storage Unit containing 14 Steel Air-Storage Tanks, with approximately 700 m³ of air-storage volume. Select “Add 2 Storage Units” to visualize a three-unit configuration. This does not change the featured pilot performance figures.',
+  pin: { manhole: 'Landfall Manhole', station: 'Shore Station', landfall: 'Pipeline Landfall', pipeline: 'Subsea Air Pipeline', tanks: 'Underwater Storage' },
+  explodeStation: { air: 'Compressed-air piping', hot: 'Hot-water piping', cool: 'Cooling-water piping', steel: 'Station structure' },
+  explodeTank: { manifold: 'Air distribution manifold', tubes: '14 Steel Air-Storage Tanks', cages: 'Rock-filled cages', core: 'Rock Ballast', slab: 'Concrete Base Slab' },
+  load: ['Loading the seabed…', 'Building the terrain…', 'Loading the Shore Station…', 'Placing the pipeline and Storage Units…'],
+  nojs: 'This interactive 3D experience requires JavaScript and WebGL.',
 };

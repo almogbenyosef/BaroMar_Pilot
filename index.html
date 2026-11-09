@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>BaroMar Cyprus Pilot — 3D</title>
-  <meta name="description" content="Interactive 3D model of BaroMar's underwater compressed-air energy storage pilot at Proteas, Cyprus.">
+  <title>Altum Mare-UWCAES Pilot Cyprus</title>
+  <meta name="description" content="Interactive 3D model of BaroMar's underwater compressed-air energy storage pilot at PROTEAS, Cyprus.">
   <meta name="robots" content="noindex">
   <link rel="icon" href="assets/img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,8 +25,8 @@
       <img src="assets/img/logo.png" alt="BaroMar">
     </a>
     <div class="title">
-      <h1>Cyprus Pilot</h1>
-      <p>Underwater compressed-air energy storage · Proteas</p>
+      <h1>Altum Mare-UWCAES Pilot Cyprus</h1>
+      <p>Isobaric, adiabatic underwater compressed-air energy storage · PROTEAS, Cyprus</p>
     </div>
     <div class="top-actions">
       <button class="btn ghost" id="btn-how" type="button">How it works</button>
@@ -41,17 +41,11 @@
     <div class="panel-body" id="panel-body"></div>
   </aside>
 
-  <section class="gauge" id="gauge" aria-label="Depth and water pressure at the focus point">
-    <div class="gauge-track"><div class="gauge-fill" id="gauge-fill"></div><div class="gauge-mark" id="gauge-mark"></div></div>
-    <div class="gauge-read">
-      <span class="g-depth" id="g-depth">0 m</span>
-      <span class="g-press" id="g-press">1.0 bar</span>
-    </div>
-  </section>
+  <nav class="ruler" id="ruler" aria-label="Along the route: click a stop to go there"></nav>
 
   <section class="minimap" id="minimap">
     <div class="minimap-head">
-      <span>Site map</span>
+      <span>Pilot location</span>
       <button type="button" class="mini-toggle" id="mini-toggle" aria-expanded="true" aria-label="Hide map">–</button>
     </div>
     <div id="map"></div>
@@ -65,7 +59,7 @@
     </div>
     <div class="soc" title="Air stored in the tanks">
       <div class="soc-bar"><div class="soc-fill" id="soc-fill"></div></div>
-      <span id="soc-label">Tanks 40% full</span>
+      <span id="soc-label">Air storage 40% full</span>
     </div>
     <button type="button" class="btn ghost small" id="btn-cycle">Play full cycle</button>
   </section>
@@ -73,7 +67,7 @@
   <div class="modal" id="how" role="dialog" aria-modal="true" aria-labelledby="how-title" hidden>
     <div class="modal-card how-card">
       <button class="modal-close" type="button" data-close aria-label="Close">×</button>
-      <h2 id="how-title">How the pilot stores energy</h2>
+      <h2 id="how-title">How BaroMar stores energy</h2>
       <div class="how-tabs" role="tablist">
         <button role="tab" data-step="charge" aria-selected="true">Charge</button>
         <button role="tab" data-step="hold" aria-selected="false">Store</button>
@@ -84,7 +78,7 @@
         <div class="how-text" id="how-text"></div>
       </div>
       <div class="how-foot">
-        <button class="btn" type="button" id="how-run">Show this in 3D</button>
+        <button class="btn" type="button" id="how-run">Explore in 3D</button>
       </div>
     </div>
   </div>
@@ -100,7 +94,7 @@
 
   <div class="loader" id="loader"><img src="assets/img/logo.png" alt=""><div class="loader-bar"><span id="loader-fill"></span></div><p id="loader-text">Loading the seabed…</p></div>
 
-  <noscript><p class="nojs">This page needs JavaScript and WebGL to show the 3D model.</p></noscript>
+  <noscript><p class="nojs">This interactive 3D experience requires JavaScript and WebGL.</p></noscript>
 
   <script src="vendor/leaflet/leaflet.js"></script>
   <script type="module" src="js/main.js"></script>

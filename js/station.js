@@ -1,104 +1,77 @@
-// Simplified shore-station model, laid out after the design render ("On-Shore render 9").
-// It is a stand-in until the current engineering model is exported: drop a file at
-// assets/models/shore_station.glb (metres, Y up, origin at pad centre) and it is used instead.
-// Units are metres; origin is the centre of the pad top surface. +X east, +Z south.
+// Shore station, from the engineering model (BAROMAR 3D model FBX, Nov 2026), lightly simplified:
+// meshes are merged by system (air, hot water, cooling water, structure) and by main equipment item,
+// and decimated so the page stays light. Converted once to assets/models/shore_station.glb
+// (metres, Y up, origin at the centre of the pad top). data/station.json holds the label anchors,
+// the pipe exit and the flow paths traced along the model's own pipe lines.
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { buildRooms } from './buildings.js';
+import { UI } from './content.js';
 
-const M = (color, o = {}) => new THREE.MeshStandardMaterial({ color, roughness: .7, metalness: .1, ...o });
-const mats = {
-  pad: M(0xcfc9bb, { roughness: .95 }),
-  plinth: M(0xb5ad9b, { roughness: 1 }),
-  steel: M(0xd9dde0, { metalness: .5, roughness: .4 }),
-  roof: M(0xb9bec2, { metalness: .4, roughness: .5, side: THREE.DoubleSide }),
-  navy: M(0x1d2c44, { metalness: .4, roughness: .45 }),
-  motor: M(0x2f4f7a, { metalness: .5, roughness: .4 }),
-  container: M(0xeeeeea, { roughness: .6 }),
-  window: M(0x26475c, { metalness: .6, roughness: .2 }),
-  blue: M(0x9cb6d6, { metalness: .35, roughness: .35 }),
-  copper: M(0xc9967a, { metalness: .55, roughness: .4 }),
-  cold: M(0xb9c9cf, { metalness: .5, roughness: .4 }),
-  tower: M(0xe8eef2, { roughness: .5 }),
-  pipe: M(0xc8ccd0, { metalness: .6, roughness: .35 }),
-  rail: M(0xe1e4e6, { metalness: .5, roughness: .4 }),
+const M = (color, o = {}) => new THREE.MeshStandardMaterial({ color, roughness: .65, metalness: .15, flatShading: true, ...o });
+// colour code used across the site: white air, red hot water, blue cooling water, yellow electricity
+const MATS = {
+  pad: M(0xcfc9bb, { roughness: .95, flatShading: false }),
+  structure: M(0xa3abb0, { metalness: .4 }), supports: M(0xb4babd, { metalness: .4 }),
+  pipe_air: M(0xf2f4f6, { roughness: .45 }), valves_air: M(0xf2f4f6),
+  pipe_hot: M(0xd8452b), pipe_cool: M(0x4a90d0), valves_cool: M(0x4a90d0), pipe_misc: M(0x7d858a),
+  compressor: M(0x2c4a73, { metalness: .35 }), teg: M(0x2f7a5c, { metalness: .35 }), hx: M(0x3fa7a0, { metalness: .35 }),
+  // T2: steel tank in an insulated aluminium jacket; T1: plastic (PP) tank
+  hotTank: M(0xd9dcdc, { metalness: .55, roughness: .35, emissive: 0x1c0704 }), coldTank: M(0xe9eef0, { metalness: 0, roughness: .8 }), coolingTower: M(0x4a6fa5),
+  dryer: M(0x6b7c8a, { metalness: .35 }), electrical: M(0x8a9095), control: M(0xe6e1d6, { roughness: .8 }), equipOther: M(0x8a9095),
 };
+// mesh name in the model → part key used by the labels and the info panel
+const PART_OF = { compressor: 'compressor', dryer: 'dryer', hx: 'hx', teg: 'teg', hotTank: 'tes', coldTank: 'coldTank', coolingTower: 'cooling', electrical: 'electrical', control: 'control' };
+// exploded view: each system lifts to its own level above the equipment
+const LIFT = { pipe_cool: 5, valves_cool: 5, pipe_misc: 5, pipe_hot: 10, pipe_air: 15, valves_air: 15, structure: 21, supports: 21 };
 
-function box(w, h, d, m, x, y, z) { const o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); o.position.set(x, y + h / 2, z); return o; }
-function cyl(r, h, m, x, y, z, seg = 24) { const o = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, seg), m); o.position.set(x, y + h / 2, z); return o; }
-function hpipe(a, b, r, m) {
-  const v = new THREE.Vector3().subVectors(b, a); const len = v.length();
-  const o = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 10), m);
-  o.position.copy(a).addScaledVector(v, .5); o.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), v.normalize()); return o;
-}
-
-export function buildStation() {
+export async function buildStation(url, meta) {
   const g = new THREE.Group(); g.name = 'station';
-  const parts = { compressor: new THREE.Group(), tes: new THREE.Group(), teg: new THREE.Group(), cooling: new THREE.Group(), control: new THREE.Group() };
-  Object.entries(parts).forEach(([k, p]) => { p.name = k; g.add(p); });
+  const parts = {};
+  const [W, D] = meta.pad;
+  // earthwork platform under the pad, so it sits level on the sloping ground
+  const plinth = new THREE.Mesh(new THREE.BoxGeometry(W + 2, 8, D + 2), new THREE.MeshStandardMaterial({ color: 0xb8a988, roughness: 1 }));
+  plinth.position.y = -4.4; plinth.userData.part = 'station'; g.add(plinth);
+  const slab = new THREE.Mesh(new THREE.BoxGeometry(W, .4, D), MATS.pad); slab.position.y = -.2; slab.userData.part = 'station'; g.add(slab);
 
-  // pad 26 × 19 m (~500 m²) on a plinth
-  g.add(box(26, .6, 19, mats.pad, 0, -.6, 0));
-  g.add(box(26.6, 4, 19.6, mats.plinth, 0, -4.6, 0));
-
-  // canopy over the machinery
-  const cx0 = -11, cx1 = 3, cz0 = -7.5, cz1 = 3.5, H = 5.6;
-  for (const x of [cx0, (cx0 + cx1) / 2, cx1]) for (const z of [cz0, cz1]) g.add(box(.25, H, .25, mats.steel, x, 0, z));
-  const roof = box(cx1 - cx0 + 1, .18, cz1 - cz0 + 1, mats.roof, (cx0 + cx1) / 2, H, (cz0 + cz1) / 2);
-  roof.userData.roof = true; g.add(roof);
-
-  // compressors: three skids with motors, plus a tall air receiver
-  [[-8.5, -4.6], [-5.6, -4.6], [-8.5, -1.2]].forEach(([x, z]) => {
-    parts.compressor.add(box(2.4, 1.7, 2.1, mats.navy, x, 0, z));
-    const m = new THREE.Mesh(new THREE.CylinderGeometry(.45, .45, 1.3, 20), mats.motor);
-    m.rotation.z = Math.PI / 2; m.position.set(x + .2, 2.1, z); parts.compressor.add(m);
+  const gltf = await new GLTFLoader().loadAsync(url);
+  const layers = [];
+  gltf.scene.traverse((o) => {
+    if (!o.isMesh) return;
+    const k = o.name;
+    if (k === 'pad') { o.visible = false; return; }   // replaced by a clean slab below
+    o.material = (MATS[k] || MATS.equipOther).clone();
+    const pk = PART_OF[k];
+    o.userData.part = pk ? 'station:' + pk : 'station';
+    if (pk) parts[pk] = o;
+    if (LIFT[k]) layers.push({ o, lift: LIFT[k], y0: o.position.y });   // quantized meshes carry their own offset
   });
-  parts.compressor.add(cyl(1.25, 9.5, mats.blue, 6.2, 0, -1.8, 32));
-  parts.compressor.add(cyl(1.32, .2, mats.rail, 6.2, 9.5, -1.8, 32));
-  for (let i = 0; i < 6; i++) parts.compressor.add(box(.05, .05, 2.8, mats.rail, 6.2 - 1.4, 1.2 + i * 1.5, -1.8));
+  g.add(gltf.scene);
+  // roofs, cladding and mesh on the steel frames; tidy electrical room; glazed control room
+  const rooms = buildRooms(); g.add(rooms.shell, rooms.inside);
+  layers.push({ o: rooms.shell, lift: LIFT.structure, y0: 0 });
 
-  // turboexpander-generator skid (two stages + generator)
-  parts.teg.add(box(4.2, .4, 2.4, mats.navy, -2.4, 0, -1.4));
-  const v1 = new THREE.Mesh(new THREE.TorusGeometry(.5, .22, 12, 24), mats.steel); v1.position.set(-3.6, 1.15, -1.4); parts.teg.add(v1);
-  const v2 = v1.clone(); v2.position.x = -1.2; parts.teg.add(v2);
-  const gen = new THREE.Mesh(new THREE.CylinderGeometry(.55, .55, 1.6, 24), mats.motor); gen.rotation.z = Math.PI / 2; gen.position.set(-2.4, 1.15, -1.4); parts.teg.add(gen);
-
-  // thermal energy storage: hot and cold water tanks (10 m³ class) beside the canopy
-  parts.tes.add(cyl(1.5, 5.2, mats.copper, 8.6, 0, 2.2, 32));
-  parts.tes.add(cyl(1.55, .15, mats.steel, 8.6, 5.2, 2.2, 32));
-  // heat exchangers under the canopy
-  [[-5.4, 1.6], [-3.4, 1.6]].forEach(([x, z]) => { const h = new THREE.Mesh(new THREE.CylinderGeometry(.35, .35, 2.6, 16), mats.steel); h.rotation.x = Math.PI / 2; h.position.set(x, .9, z); parts.tes.add(h); });
-
-  // cooling: cold-water tank and cooling tower
-  parts.cooling.add(cyl(1.4, 4.6, mats.cold, 11.2, 0, -.6, 32));
-  parts.cooling.add(box(2.6, 4.2, 2.6, mats.tower, 11.0, 0, 5.6));
-  parts.cooling.add(cyl(.9, .5, mats.navy, 11.0, 4.2, 5.6, 20));
-
-  // control container with windows
-  parts.control.add(box(2.6, 2.9, 12.2, mats.container, -13.6 + 3.4, 0, 6.2));
-  for (let i = 0; i < 3; i++) parts.control.add(box(.06, 1.1, 1.6, mats.window, -11.5, 1.2, 2.2 + i * 3.4));
-
-  // pipe rack to the pipeline exit (south-west corner)
-  for (let x = -4; x <= 10; x += 3) { g.add(box(.18, 1.2, .18, mats.rail, x, 0, 8.6)); g.add(box(.18, .1, 1.2, mats.rail, x, 1.2, 8.6)); }
-  g.add(hpipe(new THREE.Vector3(-4, 1.4, 8.4), new THREE.Vector3(10.5, 1.4, 8.4), .14, mats.pipe));
-  g.add(hpipe(new THREE.Vector3(-4, 1.4, 8.8), new THREE.Vector3(10.5, 1.4, 8.8), .1, mats.pipe));
-  g.add(hpipe(new THREE.Vector3(6.2, 2.2, -1.8), new THREE.Vector3(6.2, 2.2, 8.4), .14, mats.pipe));
-  g.add(hpipe(new THREE.Vector3(-4, 1.4, 8.4), new THREE.Vector3(-4, 1.4, 1.8), .14, mats.pipe));
-
-  // anchors for labels (local coordinates, above each part)
-  const anchors = {
-    compressor: new THREE.Vector3(-7, 7.5, -4), teg: new THREE.Vector3(-2.4, 2.6, -1.4), tes: new THREE.Vector3(8.6, 6.5, 2.2),
-    cooling: new THREE.Vector3(11.2, 5, -.6), control: new THREE.Vector3(-10.2, 4, 6.2),
+  const v = (a) => new THREE.Vector3(...a);
+  const anchors = Object.fromEntries(Object.entries(meta.anchors).map(([k, a]) => [k, v(a)]));
+  const explodeLabels = [
+    { text: UI.explodeStation.air, pos: new THREE.Vector3(-8, LIFT.pipe_air + 2.5, 14) },
+    { text: UI.explodeStation.hot, pos: new THREE.Vector3(-8.2, LIFT.pipe_hot + 2.5, -8) },
+    { text: UI.explodeStation.cool, pos: new THREE.Vector3(5.5, LIFT.pipe_cool + 3.5, -10) },
+    { text: UI.explodeStation.steel, pos: new THREE.Vector3(5, LIFT.structure + 4.6, 2) },
+  ];
+  return {
+    group: g, parts, anchors, exit: v(meta.exit), explodeLabels,
+    flows: Object.fromEntries(Object.entries(meta.flows).map(([k, pts]) => [k, pts.map(v)])),
+    setExplode(k) { layers.forEach((l) => { l.o.position.y = l.y0 + l.lift * k; }); },
   };
-  const exit = new THREE.Vector3(10.5, 1.4, 8.4); // where the air line leaves the pad
-  Object.entries(parts).forEach(([k, p]) => p.traverse((o) => { if (o.isMesh) o.userData.part = 'station:' + k; }));
-  g.traverse((o) => { if (o.isMesh && !o.userData.part) o.userData.part = 'station'; });
-  return { group: g, parts, anchors, exit };
 }
 
-// Tint a part group to show it is working (charge = heat, generate = power).
-export function glow(group, color, k) {
-  group.traverse((o) => {
+// Tint a part to show it is working.
+export function glow(obj, color, k) {
+  if (!obj) return;
+  obj.traverse((o) => {
     if (!o.isMesh) return;
-    if (!o.userData.baseEmissive) { o.material = o.material.clone(); o.userData.baseEmissive = o.material.emissive.clone(); }
+    if (!o.userData.baseEmissive) { o.userData.baseEmissive = o.material.emissive.clone(); }
     o.material.emissive.copy(o.userData.baseEmissive).lerp(new THREE.Color(color), k);
     o.material.emissiveIntensity = 1;
   });
