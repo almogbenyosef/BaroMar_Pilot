@@ -12,11 +12,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="css/style.css">
-  <script type="importmap">
-    { "imports": { "three": "./vendor/three/three.module.js", "three/addons/": "./vendor/three/addons/" } }
-  </script>
+  <link rel="stylesheet" href="gate/gate.css">
 </head>
 <body>
+  <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+    <div class="gate-card">
+      <img class="gate-logo" src="assets/img/logo.png" alt="BaroMar">
+      <h1 id="gate-title">Altum Mare-UWCAES Pilot Cyprus</h1>
+      <p>This presentation is confidential. Enter the access password to open it.</p>
+      <form id="gate-form" autocomplete="on">
+        <input type="password" id="gate-pw" placeholder="Access password" autocomplete="current-password" aria-label="Access password" required>
+        <label><input type="checkbox" id="gate-remember"> Remember on this device</label>
+        <button type="submit" id="gate-go">Open</button>
+        <p class="err" id="gate-err" role="alert" hidden></p>
+      </form>
+      <p class="fine">Confidential &amp; proprietary. Prepared for investors under NDA.</p>
+    </div>
+  </div>
   <div id="scene" aria-label="3D model of the pilot"></div>
   <div id="labels"></div>
 
@@ -97,6 +109,6 @@
   <noscript><p class="nojs">This interactive 3D experience requires JavaScript and WebGL.</p></noscript>
 
   <script src="vendor/leaflet/leaflet.js"></script>
-  <script type="module" src="js/main.js"></script>
+  <script type="module" src="gate/gate.js"></script>
 </body>
 </html>
