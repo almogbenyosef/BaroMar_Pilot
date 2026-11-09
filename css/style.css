@@ -11,7 +11,7 @@
   --heat: #e9973a;
   --gen: #3fc7b5;
   --line: rgba(12, 42, 58, .14);
-  --glass: rgba(7, 37, 54, .72);
+  --glass: rgba(7, 37, 54, .86);
   --glass-line: rgba(238, 245, 247, .16);
   --r-sm: 6px;
   --r-md: 10px;
@@ -39,7 +39,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline
 
 .btn { border: 1px solid var(--brand); background: var(--brand); color: #fff; border-radius: 999px; padding: 8px 16px; font-weight: 500; transition: transform 160ms var(--ease), background-color 160ms ease; }
 .btn:active { transform: scale(.97); }
-.btn.ghost { background: rgba(7,37,54,.55); border-color: var(--glass-line); color: var(--foam); backdrop-filter: blur(8px); }
+.btn.ghost { background: rgba(7,37,54,.78); border-color: var(--glass-line); color: var(--foam); }
 .btn.small { padding: 6px 12px; font-size: 13px; }
 .btn.icon { width: 38px; height: 38px; padding: 0; font-family: Georgia, serif; font-style: italic; font-size: 17px; }
 @media (hover: hover) and (pointer: fine) {
@@ -48,7 +48,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline
 }
 
 /* ---------- rail (path of the air) ---------- */
-.rail { position: fixed; left: 16px; top: calc(var(--top) + 12px); width: 236px; z-index: 15; background: var(--glass); border: 1px solid var(--glass-line); border-radius: var(--r-md); padding: 10px 8px 12px; backdrop-filter: blur(10px); }
+.rail { position: fixed; left: 16px; top: calc(var(--top) + 12px); width: 236px; z-index: 15; background: var(--glass); border: 1px solid var(--glass-line); border-radius: var(--r-md); padding: 10px 8px 12px; }
 .rail h2 { font-size: 12px; font-weight: 500; color: rgba(238,245,247,.6); margin: 2px 8px 8px; }
 .rail ol { list-style: none; margin: 0; padding: 0; position: relative; }
 .rail ol::before { content: ""; position: absolute; left: 21px; top: 14px; bottom: 14px; width: 2px; background: linear-gradient(to bottom, var(--limestone) 0 30%, var(--brand) 45%, var(--deep) 100%); opacity: .55; border-radius: 2px; }
@@ -103,7 +103,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline
 .stop i { width: 22px; height: 22px; flex: none; display: grid; place-items: center; }
 .stop i::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--abyss); border: 2px solid #fff; }
 .stop.km i::before { width: 6px; height: 6px; border-width: 1.5px; }
-.stop .n, .stop .d { background: rgba(7,37,54,.78); padding: 2px 7px; border-radius: 999px; font-size: 12.5px; white-space: nowrap; backdrop-filter: blur(6px); }
+.stop .n, .stop .d { background: rgba(7,37,54,.9); padding: 2px 7px; border-radius: 999px; font-size: 12.5px; white-space: nowrap; }
 .stop .n { font-weight: 500; }
 .stop .d { font-family: var(--font-c); font-size: 13px; color: #bfe6f7; }
 .stop.km .n { display: none; }
@@ -115,7 +115,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline
 .depth-tag { pointer-events: none; font-family: var(--font-c); font-size: 13px; font-weight: 600; color: #fff; background: rgba(3,20,32,.72); border: 1px solid rgba(255,255,255,.35); border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
 
 /* ---------- minimap ---------- */
-.minimap { position: fixed; left: 16px; bottom: 16px; width: 280px; z-index: 15; background: var(--glass); border: 1px solid var(--glass-line); border-radius: var(--r-md); overflow: hidden; backdrop-filter: blur(10px); }
+.minimap { position: fixed; left: 16px; bottom: 16px; width: 280px; z-index: 15; background: var(--glass); border: 1px solid var(--glass-line); border-radius: var(--r-md); overflow: hidden; }
 .minimap-head { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px 6px 12px; font-size: 13px; color: rgba(238,245,247,.75); }
 .mini-toggle { width: 26px; height: 26px; border-radius: 50%; border: 0; background: rgba(238,245,247,.08); font-size: 16px; line-height: 1; }
 #map { height: 200px; background: #0a3247; }
@@ -126,7 +126,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline
 .map-pin.focus { background: var(--heat); width: 10px; height: 10px; }
 
 /* ---------- process bar ---------- */
-.process-bar { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 15; display: flex; align-items: center; gap: 14px; background: var(--glass); border: 1px solid var(--glass-line); border-radius: 999px; padding: 6px 8px 6px 6px; backdrop-filter: blur(10px); }
+.process-bar { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 15; display: flex; align-items: center; gap: 14px; background: var(--glass); border: 1px solid var(--glass-line); border-radius: 999px; padding: 6px 8px 6px 6px; }
 .seg { display: flex; background: rgba(0,0,0,.2); border-radius: 999px; padding: 3px; }
 .seg button { border: 0; background: none; padding: 7px 14px; border-radius: 999px; font-weight: 500; color: rgba(238,245,247,.8); transition: background-color 160ms ease, color 160ms ease; }
 .seg button[aria-checked="true"][data-mode="charge"] { background: var(--heat); color: #1d1205; }
