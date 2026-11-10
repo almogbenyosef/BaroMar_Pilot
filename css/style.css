@@ -500,3 +500,51 @@ body.camview .topbar { background: linear-gradient(to bottom, rgba(0,0,0,.45), r
   .bom { top: calc(var(--top) + var(--nav2) + 50px); }
   .dk-back { top: calc(var(--top) + 10px); }
 }
+
+/* ---------- "Details" drawer: left side on a computer, pull-up sheet on a phone ---------- */
+@media (min-width: 821px) {
+  .panel { right: auto; left: 16px; width: min(400px, calc(100vw - 460px)); }
+  .panel.hidden { opacity: 0; transform: translateX(calc(-100% - 24px)); pointer-events: none; }
+  body:has(.ruler.open) .panel:not(.hidden) { transform: none; }
+  body.panel-open .bottom-stack, body.panel-open:has(.ruler.open) .bottom-stack { left: calc(min(400px, 100vw - 460px) + 40px); right: 76px; }
+  body.panel-open .minimap, body.panel-open .site-toggle { visibility: hidden; }
+}
+.panel-tab { position: fixed; z-index: 15; border: 1px solid var(--glass-line); background: rgba(7,37,54,.78); color: var(--foam); display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 13px; letter-spacing: .04em; transition: background-color 160ms ease, transform 220ms var(--ease); touch-action: none; }
+body.panel-open .panel-tab, body.presenting .panel-tab { display: none; }
+@media (min-width: 821px) {
+  .panel-tab { left: 0; top: 50%; transform: translateY(-50%); writing-mode: vertical-rl; padding: 16px 8px 16px 9px; border-left: 0; border-radius: 0 12px 12px 0; }
+  .panel-tab .pt-g { width: 3px; height: 26px; border-radius: 2px; background: rgba(238,245,247,.55); writing-mode: horizontal-tb; }
+  .panel-tab .pt-t { transform: rotate(180deg); }
+  @media (hover: hover) and (pointer: fine) { .panel-tab:hover { background: var(--brand); transform: translateY(-50%) translateX(3px); } }
+}
+.panel-grab { display: none; }
+@media (max-width: 820px) {
+  .panel-tab { left: 50%; bottom: 0; transform: translateX(-50%); flex-direction: column; gap: 3px; padding: 6px 26px calc(env(safe-area-inset-bottom, 0px) + 4px); border-bottom: 0; border-radius: 14px 14px 0 0; font-size: 12px; }
+  .panel-tab .pt-g { width: 36px; height: 4px; border-radius: 2px; background: rgba(238,245,247,.6); }
+  .process-bar { bottom: calc(env(safe-area-inset-bottom, 0px) + 36px); }
+  .bottom-stack { bottom: calc(env(safe-area-inset-bottom, 0px) + 92px); }
+  .panel-grab { display: block; position: sticky; top: 0; height: 26px; margin-bottom: -10px; cursor: grab; touch-action: none; z-index: 1; background: var(--paper); border-radius: 14px 14px 0 0; }
+  .panel-grab::before { content: ""; position: absolute; left: 50%; top: 9px; width: 40px; height: 5px; margin-left: -20px; border-radius: 3px; background: rgba(12,42,58,.25); }
+  .panel { max-height: 70dvh; }
+  .panel-body { padding-top: 6px; }
+  body.onsite .panel-tab { display: none; }
+}
+/* the reef slider: lighter, see-through on phones */
+@media (max-width: 820px) { .reef-bar { background: rgba(7,37,54,.42); border-color: rgba(238,245,247,.22); } }
+
+/* ---------- the story player (captions) ---------- */
+.cap-in { cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: pan-y; padding-top: 14px; }
+.cap-seg { display: flex; gap: 4px; margin: 0 0 12px; }
+.cap-seg:empty { display: none; }
+.cap-seg i { flex: 1; height: 3px; border-radius: 2px; background: rgba(238,245,247,.22); overflow: hidden; }
+.cap-seg b { display: block; height: 100%; background: #fff; transform-origin: left; transform: scaleX(0); transition: transform 100ms linear; }
+.cap-state { font-family: var(--font-c); font-size: 14px; letter-spacing: .04em; color: #ffd27a; white-space: nowrap; }
+.cap-foot { min-height: 0; }
+.cap-tour { border: 1px solid var(--glass-line); background: rgba(7,37,54,.62); color: var(--foam); border-radius: 999px; height: 32px; padding: 0 14px; font-size: 13px; font-weight: 600; }
+.caption.touring .cap-foot { display: none; }
+@media (hover: hover) and (pointer: fine) { .cap-tour:hover { background: var(--brand); border-color: var(--brand); } .cap-in:hover::before, .cap-in:hover::after { opacity: 1; } }
+/* faint arrows at the tap zones on hover (computer) */
+.cap-in::before, .cap-in::after { position: absolute; top: 50%; transform: translateY(-50%); font-size: 26px; color: rgba(238,245,247,.45); opacity: 0; transition: opacity 200ms ease; pointer-events: none; }
+.cap-in::before { content: "‹"; left: 8px; } .cap-in::after { content: "›"; right: 8px; }
+
+@media (min-width: 821px) { .bom { top: calc(var(--top) + 14px); bottom: auto; left: 40px; } }
