@@ -476,3 +476,27 @@ body.camview .topbar { background: linear-gradient(to bottom, rgba(0,0,0,.45), r
 /* computer / iPad landscape: an open map pushes the caption over instead of covering it */
 @media (min-width: 821px) { body:has(.minimap:not(.collapsed)) .bottom-stack { left: 316px; } }
 @media (min-width: 821px) and (max-width: 1400px) { body:has(.minimap:not(.collapsed)) .process-bar { left: auto; right: 88px; transform: none; } }
+
+/* ---------- top bar labels: full on larger screens, short on phones ---------- */
+.tn .ls { display: none; }
+.dk-n { border: 0; background: none; color: rgba(238,245,247,.85); font-size: 13px; min-width: 52px; height: 34px; border-radius: 999px; }
+.dk-back { position: absolute; left: 50%; top: calc(var(--top) + 14px); transform: translateX(-50%); pointer-events: auto; border: 0; background: var(--brand); color: #fff; border-radius: 999px; padding: 9px 18px; font-size: 14px; font-weight: 600; box-shadow: 0 6px 20px rgba(3,20,30,.35); }
+.dk-back[hidden] { display: none; }
+@media (max-width: 820px) {
+  /* phones / iPad portrait: every option visible at once, two tidy rows, no sideways scrolling */
+  .topnav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px; overflow: visible; padding: 5px 6px; }
+  .topnav .tn-sep { display: none; }
+  .topnav .tn-parts { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; }
+  .topnav .tn { justify-content: center; padding: 6px 4px; font-size: 13px; gap: 4px; min-width: 0; background: rgba(238,245,247,.06); }
+  .topnav .tn[aria-current="true"] { background: rgba(26,143,209,.45); }
+  .topnav .tn .lf { display: none; } .topnav .tn .ls { display: inline; }
+  .topnav .tn .num { width: 16px; height: 16px; font-size: 10.5px; flex: none; }
+  .topnav .tn.tour .ic { width: 16px; height: 16px; font-size: 8px; flex: none; }
+  .topnav .tn.tour .tx { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  :root { --nav2: 76px; }
+  .site-toggle, .minimap { top: calc(var(--top) + var(--nav2) + 8px); }
+  .ruler { top: calc(var(--top) + var(--nav2) + 52px); }
+  .tour-hud { top: calc(var(--top) + var(--nav2) + 6px); }
+  .bom { top: calc(var(--top) + var(--nav2) + 50px); }
+  .dk-back { top: calc(var(--top) + 10px); }
+}
