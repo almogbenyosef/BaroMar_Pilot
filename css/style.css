@@ -619,3 +619,12 @@ body.panel-open .panel-tab, body.presenting .panel-tab { display: none; }
   .hw-dots i { width: 7px; height: 7px; border-radius: 50%; background: rgba(12,42,58,.2); } .hw-dots i.on { background: var(--ink); }
 }
 .topnav > .tn, .tn-parts .tn { flex: none; }
+
+.gps-chip { position: fixed; right: 10px; top: calc(var(--top) + 84px); z-index: 25; background: rgba(7,37,54,.7); color: #bff0c9; border-radius: 999px; padding: 3px 9px; font-size: 12px; font-weight: 600; pointer-events: none; }
+.gps-chip.poor { color: #ffd27a; } .gps-chip[hidden] { display: none; }
+
+.hw-pic .spin { animation: hwSpin 1.4s linear infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes hwSpin { to { transform: rotate(360deg); } }
+
+.onsite-entry { margin-top: 10px; background: transparent !important; color: var(--ink-2) !important; border-color: var(--line) !important; }
+.pin.field-pin { background: rgba(7,37,54,.75); color: #fff; }
