@@ -7,12 +7,18 @@
   <meta name="description" content="Interactive 3D model of BaroMar's underwater compressed-air energy storage pilot at PROTEAS, Cyprus.">
   <meta name="robots" content="noindex">
   <link rel="icon" href="assets/img/favicon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="vendor/fonts/fonts.css">
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="gate/gate.css">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#062536">
+  <link rel="apple-touch-icon" href="assets/img/icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Altum Mare">
+  <script src="gate/pwa.js" defer></script>
 </head>
 <body>
   <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
@@ -22,7 +28,7 @@
       <p>This presentation is confidential. Enter the access password to open it.</p>
       <form id="gate-form" autocomplete="on">
         <input type="password" id="gate-pw" placeholder="Access password" autocomplete="current-password" aria-label="Access password" required>
-        <label><input type="checkbox" id="gate-remember"> Remember on this device</label>
+        <label><input type="checkbox" id="gate-remember" checked> Remember on this device</label>
         <button type="submit" id="gate-go">Open</button>
         <p class="err" id="gate-err" role="alert" hidden></p>
       </form>
@@ -40,13 +46,16 @@
       <h1>Altum Mare-UWCAES Pilot Cyprus</h1>
       <p>Isobaric, adiabatic underwater compressed-air energy storage · PROTEAS, Cyprus</p>
     </div>
+    <nav class="topnav" id="rail" aria-label="Explore the system">
+      <button type="button" class="tn tour" id="btn-tour"><span class="ic" aria-hidden="true">▶</span><span class="tx">Pilot overview</span></button>
+      <button type="button" class="tn" id="btn-how">How it works</button>
+      <span class="tn-sep" aria-hidden="true"></span>
+      <div class="tn-parts" id="tn-parts"></div>
+    </nav>
     <div class="top-actions">
-      <button class="btn ghost" id="btn-how" type="button">How it works</button>
       <button class="btn ghost icon" id="btn-about" type="button" aria-label="About and sources">i</button>
     </div>
   </header>
-
-  <nav class="rail" id="rail" aria-label="Parts of the system"></nav>
 
   <aside class="panel" id="panel" aria-live="polite">
     <button class="panel-close" id="panel-close" type="button" aria-label="Close panel">×</button>
@@ -55,13 +64,18 @@
 
   <nav class="ruler" id="ruler" aria-label="Along the route: click a stop to go there"></nav>
 
-  <section class="minimap" id="minimap">
+  <section class="minimap collapsed" id="minimap">
     <div class="minimap-head">
       <span>Pilot location</span>
-      <button type="button" class="mini-toggle" id="mini-toggle" aria-expanded="true" aria-label="Hide map">–</button>
+      <button type="button" class="mini-toggle" id="mini-toggle" aria-expanded="false" aria-label="Show map">+</button>
     </div>
     <div id="map"></div>
   </section>
+
+  <button type="button" class="float-explode" id="float-explode" aria-pressed="false" hidden>
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 9h16M4 15h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 2v4m0 0-2-2m2 2 2-2M12 22v-4m0 0-2 2m2-2 2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    <span>Take it apart</span>
+  </button>
 
   <section class="process-bar" id="process-bar" aria-label="Simulate the storage cycle">
     <div class="seg" role="radiogroup" aria-label="Operating mode">

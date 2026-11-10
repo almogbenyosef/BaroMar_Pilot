@@ -33,7 +33,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline
 .topbar > * { pointer-events: auto; }
 .brand { display: flex; align-items: center; background: #fff; border-radius: var(--r-sm); padding: 6px 10px; height: 40px; }
 .brand img { height: 28px; width: auto; display: block; }
-.title h1 { margin: 0; font-family: var(--font-c); font-weight: 600; font-size: 22px; letter-spacing: .01em; line-height: 1; }
+.title { min-width: 0; }
+.title h1 { white-space: nowrap; margin: 0; font-family: var(--font-c); font-weight: 600; font-size: 22px; letter-spacing: .01em; line-height: 1; }
 .title p { margin: 3px 0 0; font-size: 13px; color: rgba(238,245,247,.72); }
 .top-actions { margin-left: auto; display: flex; gap: 8px; }
 
@@ -47,21 +48,29 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline
   .btn:not(.ghost):hover { background: #1580be; }
 }
 
-/* ---------- rail (path of the air) ---------- */
-.rail { position: fixed; left: 16px; top: calc(var(--top) + 12px); width: 236px; z-index: 15; background: var(--glass); border: 1px solid var(--glass-line); border-radius: var(--r-md); padding: 10px 8px 12px; }
-.rail h2 { font-size: 12px; font-weight: 500; color: rgba(238,245,247,.6); margin: 2px 8px 8px; }
-.rail ol { list-style: none; margin: 0; padding: 0; position: relative; }
-.rail ol::before { content: ""; position: absolute; left: 21px; top: 14px; bottom: 14px; width: 2px; background: linear-gradient(to bottom, var(--limestone) 0 30%, var(--brand) 45%, var(--deep) 100%); opacity: .55; border-radius: 2px; }
-.rail li button { width: 100%; display: flex; align-items: center; gap: 10px; text-align: left; background: none; border: 0; padding: 7px 8px; border-radius: var(--r-sm); color: rgba(238,245,247,.82); position: relative; }
-.rail li button .dot { width: 28px; height: 28px; border-radius: 50%; flex: none; display: grid; place-items: center; font-family: var(--font-c); font-size: 14px; background: var(--abyss); border: 1.5px solid rgba(238,245,247,.35); color: rgba(238,245,247,.85); position: relative; z-index: 1; }
-.rail li button[aria-current="true"] { background: rgba(26,143,209,.22); color: #fff; }
-.rail li button[aria-current="true"] .dot { background: var(--brand); border-color: var(--brand); color: #fff; }
-.rail li button .sub { display: block; font-size: 12px; color: rgba(238,245,247,.55); }
-@media (hover: hover) and (pointer: fine) { .rail li button:hover { background: rgba(238,245,247,.07); } }
+/* ---------- top navigation: tour, how it works, parts (see-through until the pointer comes near) ---------- */
+.topnav { margin: 0 auto; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 999px; background: rgba(7,37,54,.34); border: 1px solid rgba(238,245,247,.12); transition: background-color 220ms ease, border-color 220ms ease; min-width: 0; }
+.topnav:hover, .topnav:focus-within { background: rgba(7,37,54,.82); border-color: var(--glass-line); }
+.tn-parts { display: flex; gap: 2px; }
+.tn { display: flex; align-items: center; gap: 7px; border: 0; background: none; color: rgba(238,245,247,.74); padding: 6px 12px; border-radius: 999px; font-size: 14px; font-weight: 500; white-space: nowrap; transition: transform 180ms var(--ease), background-color 160ms ease, color 160ms ease; }
+.tn .num { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-c); font-size: 12px; border: 1.5px solid currentColor; opacity: .8; }
+.tn .ic { font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; background: var(--brand); color: #fff; }
+.tn[aria-current="true"] { color: #fff; background: rgba(238,245,247,.14); }
+.tn.tour.on { background: var(--heat); color: #1d1205; }
+.tn.tour.on .ic { background: #1d1205; color: var(--heat); }
+.tn-sep { width: 1px; height: 18px; background: rgba(238,245,247,.2); margin: 0 4px; flex: none; }
+@media (hover: hover) and (pointer: fine) {
+  .tn:hover { background: var(--brand); color: #fff; transform: scale(1.07); }
+  .tn.tour.on:hover { background: #f0a752; color: #1d1205; }
+}
+.tn:active { transform: scale(.97); }
 
 /* ---------- info panel ---------- */
 .panel { position: fixed; right: 200px; top: calc(var(--top) + 12px); width: min(400px, calc(100vw - 470px)); max-height: calc(100dvh - var(--top) - 104px); z-index: 16; background: var(--paper); color: var(--ink); border-radius: var(--r-md); box-shadow: 0 18px 50px rgba(3, 20, 30, .45); display: flex; flex-direction: column; transition: opacity 220ms var(--ease), transform 220ms var(--ease); }
 .panel.hidden { opacity: 0; transform: translateY(8px); pointer-events: none; }
+.panel { transition: opacity 320ms var(--ease), transform 220ms var(--ease); }
+@media (hover: hover) and (pointer: fine) { .panel:not(.hidden):not(.fresh):not(:hover):not(:focus-within) { opacity: .3; } }
+.panel.faded:not(.hidden):not(:hover):not(:focus-within) { opacity: .3; }
 .panel-body { overflow-y: auto; padding: 22px 24px 24px; overscroll-behavior: contain; }
 .panel-close { position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; border-radius: 50%; border: 0; background: transparent; color: var(--ink-2); font-size: 22px; line-height: 1; }
 .panel-close:hover { background: rgba(12,42,58,.07); }
@@ -111,12 +120,25 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline
 .stop.here .n, .stop.here .d { background: var(--brand); color: #fff; }
 @media (hover: hover) and (pointer: fine) { .stop:hover .n, .stop:hover .d { background: var(--brand); color: #fff; } .stop.km:hover .n { display: inline; } }
 
+/* slim ruler: dots and the current depth only; labels slide in when the pointer comes near or the place changes */
+.ruler { pointer-events: none; }
+.ruler .stop { pointer-events: none; }
+.ruler .stop i { pointer-events: auto; transition: transform 220ms var(--ease); }
+.ruler .stop .n, .ruler .stop .d { opacity: 0; transform: translateX(10px); transition: opacity 220ms ease, transform 260ms var(--ease), background-color 160ms ease; }
+.ruler .stop.here .d { opacity: .85; transform: none; }
+.ruler:not(.open) .stop i { transform: scale(.72); }
+.ruler:not(.open) .ruler-track { opacity: .7; }
+.ruler-track { transition: opacity 220ms ease; }
+.ruler.open .stop { pointer-events: auto; }
+.ruler.open .stop .n, .ruler.open .stop .d { opacity: 1; transform: none; }
+
 /* ---------- depth tags on the seabed ---------- */
 .depth-tag { pointer-events: none; font-family: var(--font-c); font-size: 13px; font-weight: 600; color: #fff; background: rgba(3,20,32,.72); border: 1px solid rgba(255,255,255,.35); border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
 
 /* ---------- minimap ---------- */
 .minimap { position: fixed; left: 16px; bottom: 16px; width: 280px; z-index: 15; background: var(--glass); border: 1px solid var(--glass-line); border-radius: var(--r-md); overflow: hidden; }
-.minimap-head { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px 6px 12px; font-size: 13px; color: rgba(238,245,247,.75); }
+.minimap.collapsed { width: auto; }
+.minimap-head { cursor: pointer; gap: 12px; display: flex; align-items: center; justify-content: space-between; padding: 6px 8px 6px 12px; font-size: 13px; color: rgba(238,245,247,.75); }
 .mini-toggle { width: 26px; height: 26px; border-radius: 50%; border: 0; background: rgba(238,245,247,.08); font-size: 16px; line-height: 1; }
 #map { height: 200px; background: #0a3247; }
 .minimap.collapsed #map { display: none; }
@@ -124,6 +146,13 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline
 .map-pin { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #fff; background: var(--brand); box-shadow: 0 1px 4px rgba(0,0,0,.5); }
 .map-pin.tank { background: var(--abyss); }
 .map-pin.focus { background: var(--heat); width: 10px; height: 10px; }
+
+/* ---------- take it apart, floating over the 3D view ---------- */
+.float-explode { position: fixed; left: 50%; bottom: 72px; transform: translateX(-50%); z-index: 15; display: flex; align-items: center; gap: 8px; border: 1px solid var(--glass-line); background: rgba(7,37,54,.62); color: var(--foam); border-radius: 999px; padding: 7px 16px 7px 12px; font-weight: 500; font-size: 14px; transition: transform 180ms var(--ease), background-color 160ms ease, color 160ms ease; }
+.float-explode[hidden] { display: none; }
+.float-explode[aria-pressed="true"] { background: var(--heat); border-color: var(--heat); color: #1d1205; }
+@media (hover: hover) and (pointer: fine) { .float-explode:hover { background: var(--heat); border-color: var(--heat); color: #1d1205; transform: translateX(-50%) scale(1.05); } }
+.float-explode:active { transform: translateX(-50%) scale(.97); }
 
 /* ---------- process bar ---------- */
 .process-bar { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 15; display: flex; align-items: center; gap: 14px; background: var(--glass); border: 1px solid var(--glass-line); border-radius: 999px; padding: 6px 8px 6px 6px; }
@@ -185,6 +214,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline
 .nojs { position: fixed; inset: 0; display: grid; place-items: center; z-index: 70; background: var(--abyss); }
 
 /* ---------- small screens ---------- */
+@media (max-width: 1640px) { .title p { display: none; } .title h1 { font-size: 19px; } }
+@media (max-width: 1400px) and (min-width: 821px) { .title { display: none; } }
 @media (max-width: 1100px) {
   .panel { width: min(360px, calc(100vw - 320px)); }
 }
@@ -197,14 +228,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline
   #btn-how { padding: 7px 12px; font-size: 13px; white-space: nowrap; }
   .top-actions { flex: none; }
   #btn-cycle { white-space: nowrap; }
-  .rail { left: 0; right: 0; top: var(--top); width: auto; border-radius: 0; border-left: 0; border-right: 0; padding: 6px 8px; overflow-x: auto; scrollbar-width: none; }
-  .rail::-webkit-scrollbar { display: none; }
-  .rail h2 { display: none; }
-  .rail ol { display: flex; gap: 2px; }
-  .rail ol::before { display: none; }
-  .rail li button { white-space: nowrap; padding: 4px 10px 4px 4px; }
-  .rail li button .dot { width: 24px; height: 24px; font-size: 13px; }
-  .rail li button .sub { display: none; }
+  .topnav { position: fixed; left: 0; right: 0; top: var(--top); margin: 0; border-radius: 0; border-left: 0; border-right: 0; background: var(--glass); padding: 5px 8px; overflow-x: auto; scrollbar-width: none; justify-content: flex-start; }
+  .topnav::-webkit-scrollbar { display: none; }
+  .tn { padding: 6px 10px; font-size: 13.5px; }
+  .float-explode { left: auto; right: 8px; bottom: 76px; transform: none; }
+  .float-explode:active { transform: scale(.97); }
   .panel { left: 0; right: 0; top: auto; bottom: 0; width: auto; max-height: 52dvh; border-radius: 14px 14px 0 0; padding-bottom: env(safe-area-inset-bottom); }
   .panel.hidden { transform: translateY(100%); }
   .panel-body { padding: 18px 16px 20px; }
