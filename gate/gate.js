@@ -73,4 +73,8 @@ $('gate-form').addEventListener('submit', async (e) => {
   }
 });
 
+// on-site QR: the link may carry the access key after "#k=" (never sent to the server); keep it on this
+// device like "Remember", and take it out of the address bar
+{ const m = location.hash.match(/(?:^#|&)k=([A-Za-z0-9_-]+)/);
+  if (m) { store.set(m[1].replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - m[1].length % 4) % 4)); history.replaceState(null, '', location.pathname + location.search); } }
 tryStored().then((ok) => { if (!ok) { $('gate').classList.add('ready'); $('gate-pw').focus(); } });

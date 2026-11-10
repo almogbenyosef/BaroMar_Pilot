@@ -355,3 +355,67 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline
 @media (hover: hover) and (pointer: fine) { .cap-more:hover { background: var(--brand); border-color: var(--brand); color: #fff; } }
 @media (max-width: 820px) { .bottom-stack { bottom: 66px; } .cap-t { font-size: 16px; } .cap-in { padding: 8px 12px 9px; } }
 @media (prefers-reduced-motion: reduce) { .cap-in { opacity: 1; transform: none; } }
+
+/* ---------- Present mode: the 3D view with a few words; the rest of the interface steps aside ---------- */
+body.presenting .topbar .topnav, body.presenting .ruler, body.presenting .minimap, body.presenting .process-bar, body.presenting .bottom-stack,
+body.presenting .site-toggle, body.presenting .panel, body.presenting .tour-hud, body.presenting .bom, body.presenting #labels .pin { display: none !important; }
+.deck { position: fixed; inset: 0; z-index: 30; pointer-events: none; }
+.deck::before { content: ""; position: absolute; left: 0; bottom: 0; width: 70vw; height: 70vh; background: radial-gradient(ellipse at 0% 100%, rgba(3,20,30,.55), rgba(3,20,30,0) 65%); }
+.deck[hidden] { display: none; }
+.dk-card { position: absolute; left: max(32px, 4vw); bottom: max(84px, 10vh); max-width: min(620px, 46vw); pointer-events: auto; opacity: 0; transform: translateY(10px); }
+.dk-card.in { animation: capIn 640ms var(--ease) forwards; }
+.dk-k { display: inline-block; margin: 0 0 10px; font-family: var(--font-c); font-weight: 600; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; color: #fff; background: var(--brand); border-radius: 4px; padding: 3px 9px; }
+.dk-t { margin: 0 0 12px; font-family: var(--font-c); font-weight: 600; font-size: clamp(30px, 4.2vw, 56px); line-height: 1.02; color: #fff; text-wrap: balance; text-shadow: 0 2px 14px rgba(3,20,30,.55); }
+.dk-p { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.dk-p li { display: inline-block; justify-self: start; background: rgba(7,37,54,.62); color: #fff; border-radius: 8px; padding: 6px 12px; font-size: clamp(15px, 1.35vw, 19px); font-weight: 500; }
+.dk-fig { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 4px; }
+.dk-fig:empty { display: none; }
+.dk-fig div { background: rgba(7,37,54,.7); border-radius: 10px; padding: 10px 12px; }
+.dk-fig b { display: block; font-family: var(--font-c); font-size: 34px; line-height: 1; color: #fff; }
+.dk-fig b small { font-size: 15px; margin-left: 3px; color: #9fdcf6; }
+.dk-fig span { display: block; font-size: 12.5px; color: rgba(238,245,247,.8); margin-top: 4px; }
+.dk-nav { position: absolute; right: 20px; bottom: 20px; display: flex; align-items: center; gap: 6px; pointer-events: auto; background: rgba(7,37,54,.6); border: 1px solid var(--glass-line); border-radius: 999px; padding: 4px; opacity: .45; transition: opacity 200ms ease; }
+.dk-nav:hover, .dk-nav:focus-within { opacity: 1; }
+.dk-nav button { border: 0; background: none; color: #fff; min-width: 34px; height: 34px; border-radius: 999px; font-size: 22px; line-height: 1; }
+.dk-nav .dk-pdf { font-size: 13px; padding: 0 12px; background: rgba(238,245,247,.12); }
+.dk-nav .dk-x { font-size: 20px; }
+.dk-n { font-size: 13px; color: rgba(238,245,247,.85); min-width: 44px; text-align: center; }
+@media (hover: hover) and (pointer: fine) { .dk-nav button:hover { background: var(--brand); } }
+@media (max-width: 820px) { .dk-card { left: 16px; right: 16px; bottom: 76px; max-width: none; } .dk-fig { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---------- the PDF: one 16:9 page per slide (only used when printing) ---------- */
+#print-deck { display: none; }
+@media print {
+  @page { size: 16in 9in; margin: 0; }
+  html, body { height: auto; overflow: visible; background: #fff; }
+  body > *:not(#print-deck) { display: none !important; }
+  #print-deck { display: block; }
+  .ps { position: relative; width: 16in; height: 9in; overflow: hidden; page-break-after: always; break-after: page; }
+  .ps > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .ps-band { position: absolute; left: 0; top: 0; bottom: 0; width: 5.6in; padding: .55in .5in; background: linear-gradient(90deg, rgba(7,37,54,.9) 0%, rgba(7,37,54,.82) 50%, rgba(7,37,54,.45) 78%, rgba(7,37,54,0) 100%); width: 6.6in; color: #fff; font-family: var(--font); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .ps-logo { width: 1.6in; background: #fff; padding: .07in .12in; border-radius: .06in; }
+  .ps-k { margin: .55in 0 .08in; font-family: var(--font-c); font-weight: 600; font-size: 13pt; letter-spacing: .12em; text-transform: uppercase; color: #9fdcf6; }
+  .ps h2 { margin: 0 0 .22in; font-family: var(--font-c); font-weight: 600; font-size: 34pt; line-height: 1.04; }
+  .ps ul { margin: 0; padding: 0 0 0 .2in; font-size: 15pt; line-height: 1.45; }
+  .ps-fig { display: grid; grid-template-columns: 1fr 1fr; gap: .12in; }
+  .ps-fig div { border-top: 1px solid rgba(255,255,255,.35); padding-top: .06in; }
+  .ps-fig b { display: block; font-family: var(--font-c); font-size: 24pt; } .ps-fig b small { font-size: 11pt; margin-left: 2px; color: #9fdcf6; }
+  .ps-fig span { font-size: 9.5pt; color: rgba(255,255,255,.8); }
+  .ps-n { position: absolute; left: .5in; bottom: .35in; right: .3in; margin: 0; font-size: 8pt; color: rgba(255,255,255,.65); }
+}
+
+/* ---------- on site (QR): big touch buttons, camera picture behind the model ---------- */
+.onsite-bar { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); transform: translateX(-50%); z-index: 25; display: flex; gap: 6px; background: rgba(7,37,54,.86); border: 1px solid var(--glass-line); border-radius: 18px; padding: 6px; }
+.onsite-bar[hidden] { display: none; }
+.onsite-bar button { display: flex; flex-direction: column; align-items: center; gap: 2px; border: 0; background: none; color: var(--foam); border-radius: 12px; padding: 7px 10px; min-width: 64px; font-size: 12px; font-weight: 500; }
+.onsite-bar button[hidden] { display: none; }
+.onsite-bar button b { font-size: 20px; line-height: 1; font-weight: 400; }
+.onsite-bar button.on { background: var(--brand); color: #fff; }
+body.onsite .process-bar, body.onsite .ruler, body.onsite .minimap, body.onsite .site-toggle { display: none; }
+body.onsite .bottom-stack { bottom: calc(env(safe-area-inset-bottom, 0px) + 84px); }
+#onsite-video { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; background: #000; }
+body.camview { background: #000; }
+body.camview #scene { z-index: 1; }
+body.camview .topbar { background: linear-gradient(to bottom, rgba(0,0,0,.45), rgba(0,0,0,0)); }
+.pin.you-pin { background: #ff7a3c; color: #fff; border-color: #fff; }
+.pin.you-pin i { display: none; }
