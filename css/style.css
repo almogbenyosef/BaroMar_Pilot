@@ -316,6 +316,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline
 @media (max-width: 820px) { .tour-hud { top: calc(var(--top) + 52px); } }
 
 /* ---------- PROTEAS site switch (bottom left, above the map) ---------- */
+.site-toggle[hidden] { display: none; }
 .site-toggle { position: fixed; left: 16px; bottom: 60px; z-index: 15; display: flex; align-items: center; gap: 8px; border: 1px solid var(--glass-line); background: rgba(7,37,54,.72); color: var(--foam); border-radius: 999px; padding: 6px 12px 6px 7px; font-size: 13px; font-weight: 500; transition: background-color 160ms ease; }
 .site-toggle .sw { width: 28px; height: 16px; border-radius: 999px; background: rgba(238,245,247,.25); position: relative; transition: background-color 160ms ease; }
 .site-toggle .sw::after { content: ""; position: absolute; left: 2px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #fff; transition: transform 200ms var(--ease); }
@@ -338,23 +339,35 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline
 .offline-box .ov { font-size: 13px; color: var(--ink-2); }
 
 /* ---------- caption, reef slider and floating tools, stacked above the mode bar ---------- */
-.bottom-stack { position: fixed; left: 50%; bottom: 72px; transform: translateX(-50%); z-index: 15; display: flex; flex-direction: column; align-items: center; gap: 10px; width: min(620px, calc(100vw - 32px)); pointer-events: none; }
+/* wide on a computer: from the left margin almost to the depth ruler, or to the text panel when it is open */
+.bottom-stack { position: fixed; left: 32px; right: 76px; bottom: 72px; z-index: 15; display: flex; flex-direction: column; align-items: center; gap: 10px; pointer-events: none; transition: right 280ms var(--ease); }
+body.panel-open .bottom-stack { right: calc(min(430px, 100vw - 420px) + 58px + 28px); }
+body.panel-open:has(.ruler.open) .bottom-stack { right: calc(min(430px, 100vw - 420px) + 210px + 28px); }
 .bottom-stack > * { pointer-events: auto; }
-.caption { width: 100%; text-align: center; color: #fff; pointer-events: none; }
+.caption { width: 100%; color: #fff; pointer-events: none; }
 .caption[hidden] { display: none; }
-.cap-in { display: inline-block; background: rgba(7,37,54,.62); border-radius: 14px; padding: 10px 18px 11px; opacity: 0; transform: translateY(6px); }
+.cap-in { position: relative; background: rgba(7,37,54,.7); border: 1px solid rgba(238,245,247,.14); border-radius: 16px; padding: 16px 26px 20px; opacity: 0; transform: translateY(6px); overflow: hidden; min-height: 112px; display: flex; flex-direction: column; justify-content: center; }
 .cap-in.in { animation: capIn 520ms var(--ease) forwards; }
 @keyframes capIn { to { opacity: 1; transform: none; } }
-.cap-h { display: block; font-family: var(--font-c); font-weight: 600; font-size: 15px; letter-spacing: .08em; text-transform: uppercase; color: #9fdcf6; }
-.cap-t { margin: 3px 0 0; font-size: 19px; line-height: 1.32; font-weight: 500; text-wrap: balance; text-shadow: 0 1px 2px rgba(0,0,0,.25); }
-.cap-foot { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 6px; pointer-events: auto; }
-.cap-dots { display: flex; gap: 5px; }
-.cap-dots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(238,245,247,.4); }
-.cap-dots i.on { background: #fff; }
-.cap-more { border: 1px solid var(--glass-line); background: rgba(7,37,54,.55); color: var(--foam); border-radius: 999px; padding: 3px 11px; font-size: 12.5px; }
-@media (hover: hover) and (pointer: fine) { .cap-more:hover { background: var(--brand); border-color: var(--brand); color: #fff; } }
-@media (max-width: 820px) { .bottom-stack { bottom: 66px; } .cap-t { font-size: 16px; } .cap-in { padding: 8px 12px 9px; } }
-@media (prefers-reduced-motion: reduce) { .cap-in { opacity: 1; transform: none; } }
+.cap-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.cap-h { font-family: var(--font-c); font-weight: 600; font-size: 16px; letter-spacing: .1em; text-transform: uppercase; color: #9fdcf6; }
+.cap-n { font-family: var(--font-c); font-size: 15px; color: rgba(238,245,247,.7); }
+.cap-t { margin: 6px 0 0; font-size: 26px; line-height: 1.3; font-weight: 500; text-wrap: balance; }
+.cap-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(238,245,247,.1); }
+.cap-bar i { display: block; height: 100%; width: 100%; background: #9fdcf6; transform-origin: left; animation: capTime 7s linear forwards; }
+@keyframes capTime { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.caption.paused .cap-bar i, .caption.single .cap-bar { visibility: hidden; }
+.cap-foot { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 8px; pointer-events: auto; }
+.cap-b { border: 1px solid var(--glass-line); background: rgba(7,37,54,.62); color: #fff; width: 36px; height: 36px; border-radius: 50%; font-size: 20px; line-height: 1; display: grid; place-items: center; }
+.cap-play { font-size: 11px; letter-spacing: -1px; }
+.caption.single .cap-b, .caption.single .cap-dots { display: none; }
+.cap-dots { display: flex; gap: 4px; }
+.cap-dots i { width: 22px; height: 22px; display: grid; place-items: center; cursor: pointer; }
+.cap-dots i::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: rgba(238,245,247,.4); }
+.cap-dots i.on::before { background: #fff; transform: scale(1.3); }
+.cap-more { border: 1px solid var(--glass-line); background: rgba(7,37,54,.62); color: var(--foam); border-radius: 999px; height: 36px; padding: 0 16px; font-size: 14px; }
+@media (hover: hover) and (pointer: fine) { .cap-more:hover, .cap-b:hover { background: var(--brand); border-color: var(--brand); color: #fff; } }
+@media (prefers-reduced-motion: reduce) { .cap-in { opacity: 1; transform: none; } .cap-bar i { animation: none; } }
 
 /* ---------- Present mode: the 3D view with a few words; the rest of the interface steps aside ---------- */
 body.presenting .topbar .topnav, body.presenting .ruler, body.presenting .minimap, body.presenting .process-bar, body.presenting .bottom-stack,
@@ -419,3 +432,47 @@ body.camview #scene { z-index: 1; }
 body.camview .topbar { background: linear-gradient(to bottom, rgba(0,0,0,.45), rgba(0,0,0,0)); }
 .pin.you-pin { background: #ff7a3c; color: #fff; border-color: #fff; }
 .pin.you-pin i { display: none; }
+
+/* ---------- laptops and iPad landscape: a tighter top bar ---------- */
+@media (max-width: 1320px) and (min-width: 821px) {
+  .tn { padding: 6px 9px; font-size: 13px; gap: 5px; }
+  .tn .num { width: 16px; height: 16px; font-size: 11px; }
+  .tn-sep { margin: 0 2px; }
+  .brand img { height: 20px; }
+}
+@media (max-width: 1100px) and (min-width: 821px) { .tn .num { display: none; } .bottom-stack { left: 20px; } .cap-t { font-size: 22px; } }
+
+/* ---------- phones and iPad mini (portrait): nothing on top of anything ---------- */
+@media (max-width: 820px) {
+  /* map and PROTEAS switch move up, under the top bar, out of the way of the controls at the bottom */
+  .site-toggle { top: calc(var(--top) + 54px); bottom: auto; left: 8px; padding: 5px 10px 5px 6px; font-size: 12.5px; }
+  .minimap { top: calc(var(--top) + 54px); bottom: auto; left: 150px; width: auto; max-width: calc(100vw - 150px - 70px); }
+  .minimap:not(.collapsed) { width: min(260px, calc(100vw - 150px - 70px)); }
+  .minimap-head { padding: 4px 6px 4px 10px; }
+  #map { height: 150px; }
+  .ruler { top: calc(var(--top) + 100px); height: 34vh; }
+  /* caption, reef slider and tools: one column above the mode bar, full width */
+  .bottom-stack { left: 8px; right: 8px; bottom: calc(env(safe-area-inset-bottom, 0px) + 66px); gap: 8px; }
+  body.panel-open .bottom-stack { right: 8px; }
+  .cap-in { padding: 14px 16px 18px; min-height: 124px; border-radius: 14px; }
+  .cap-h { font-size: 14px; }
+  .cap-t { font-size: 20px; line-height: 1.32; }
+  .cap-b, .cap-more { height: 34px; }
+  .cap-b { width: 34px; }
+  .float-tools { gap: 6px; flex-wrap: nowrap; width: 100%; justify-content: center; }
+  .float-explode { padding: 7px 10px; font-size: 13px; white-space: nowrap; }
+  .float-explode svg { display: none; }
+  .reef-bar { width: 100%; }
+  /* the text panel is a sheet from the bottom; while it is open the other controls step aside */
+  .panel { z-index: 26; }
+  body.panel-open .bottom-stack, body.panel-open .site-toggle, body.panel-open .minimap, body.panel-open .process-bar, body.panel-open .ruler, body.panel-open .onsite-bar { visibility: hidden; }
+  .bom { top: calc(var(--top) + 96px); bottom: auto; left: 8px; width: 200px; font-size: 12px; }
+  .bom li { font-size: 12px; } .bom h3 { font-size: 11.5px; padding: 5px 8px; }
+  body.onsite .bottom-stack { bottom: calc(env(safe-area-inset-bottom, 0px) + 84px); }
+}
+@media (max-width: 400px) { .cap-t { font-size: 18px; } .float-explode { padding: 7px 8px; font-size: 12.5px; } .minimap { left: 140px; } }
+
+#btn-cycle { white-space: nowrap; }
+/* computer / iPad landscape: an open map pushes the caption over instead of covering it */
+@media (min-width: 821px) { body:has(.minimap:not(.collapsed)) .bottom-stack { left: 316px; } }
+@media (min-width: 821px) and (max-width: 1400px) { body:has(.minimap:not(.collapsed)) .process-bar { left: auto; right: 88px; transform: none; } }
