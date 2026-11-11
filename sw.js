@@ -3,7 +3,7 @@
 // - satellite tiles (Esri) and anything else from outside are stored the first time they load,
 //   so after one online visit the whole presentation, maps included, works without a connection;
 // - a new version of the site installs in the background and is used from the next start.
-const VERSION = 'fa2491b6f886';
+const VERSION = 'f461c078bd21';
 const SHELL = ["./","assets/img/favicon.png","assets/img/icon-180.png","assets/img/icon-192.png","assets/img/icon-512.png","assets/img/icon-maskable-512.png","assets/img/logo.png","css/style.css","gate/gate.css","gate/gate.js","gate/pwa.js","index.html","manifest.webmanifest","secure.bin","vendor/fonts/OFL.txt","vendor/fonts/barlow-condensed-latin-500-normal.woff2","vendor/fonts/barlow-condensed-latin-600-normal.woff2","vendor/fonts/barlow-latin-400-normal.woff2","vendor/fonts/barlow-latin-500-normal.woff2","vendor/fonts/barlow-latin-600-normal.woff2","vendor/fonts/fonts.css","vendor/leaflet/images/layers-2x.png","vendor/leaflet/images/layers.png","vendor/leaflet/images/marker-icon-2x.png","vendor/leaflet/images/marker-icon.png","vendor/leaflet/images/marker-shadow.png","vendor/leaflet/leaflet.css","vendor/leaflet/leaflet.js"];
 const SITE_CACHE = 'altum-site-' + VERSION, EXT_CACHE = 'altum-ext-v1';
 
