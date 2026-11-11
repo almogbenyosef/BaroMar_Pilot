@@ -10,7 +10,12 @@ const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform 
 // ---- service worker
 const swOk = 'serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1');
 if (swOk) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});   // a new version is used from the next start
+  // a new version installs in the background; if it arrives in the first seconds after opening, before the
+  // visitor has done anything, the page quietly reloads into it (otherwise it is used from the next start)
+  const hadController = !!navigator.serviceWorker.controller; let touched = false;
+  ['pointerdown', 'keydown'].forEach((t) => addEventListener(t, () => { touched = true; }, { once: true, capture: true }));
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (hadController && !touched && performance.now() < 25000) location.reload(); });
+  navigator.serviceWorker.register('sw.js').then((r) => r.update().catch(() => {})).catch(() => {});
 }
 
 // ---- satellite tiles: the app hands over the tiles it uses, they are stored for offline use
