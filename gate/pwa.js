@@ -1,28 +1,16 @@
-// App mode: offline storage, "install" prompt and update notice. Works on desktop (Chrome/Edge),
+// App mode: offline storage and install. Nothing pops up on screen: everything about it lives in the
+// "i" (About) box (version, update and save for offline, install). Works on desktop (Chrome/Edge),
 // Android (Chrome) and iPad/iPhone (Safari → Share → Add to Home Screen).
 const EXT_CACHE = 'altum-ext-v1';
 const LS = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* private mode */ } } };
 const standalone = matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches || navigator.standalone === true;
 const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-let box = null;
-function pill(html, actions = {}, ms = 0) {
-  if (!box) { box = document.createElement('div'); box.className = 'pwa-box'; box.setAttribute('role', 'status'); document.body.appendChild(box); }
-  const p = document.createElement('div'); p.className = 'pwa-pill'; p.innerHTML = html;
-  for (const [sel, fn] of Object.entries(actions)) p.querySelector(sel)?.addEventListener('click', () => { fn(); p.remove(); });
-  const x = document.createElement('button'); x.type = 'button'; x.className = 'pwa-x'; x.setAttribute('aria-label', 'Close'); x.textContent = '×'; x.onclick = () => p.remove(); p.appendChild(x);
-  box.appendChild(p); if (ms) setTimeout(() => p.remove(), ms);
-  return p;
-}
 
 // ---- service worker
 const swOk = 'serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1');
 if (swOk) {
-  const hadController = !!navigator.serviceWorker.controller;
-  navigator.serviceWorker.register('sw.js').catch(() => {});
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (hadController) pill('A new version of the presentation is ready. <button type="button" class="pwa-btn" data-a="r">Restart</button>', { '[data-a="r"]': () => location.reload() });
-  });
+  navigator.serviceWorker.register('sw.js').catch(() => {});   // a new version is used from the next start
 }
 
 // ---- satellite tiles: the app hands over the tiles it uses, they are stored for offline use
@@ -35,7 +23,7 @@ async function pump(cache) {
 }
 function finished() {
   if (!swOk || LS.get('altum-offline-ok')) return;
-  navigator.serviceWorker.ready.then(() => { LS.set('altum-offline-ok', '1'); pill('Saved on this device: the presentation now also works offline.', {}, 7000); });
+  navigator.serviceWorker.ready.then(() => { LS.set('altum-offline-ok', '1'); document.querySelectorAll('.offline-box .ov').forEach((o) => { if (/Not saved|Checking/.test(o.textContent)) o.textContent = 'Saved for offline use'; }); });
 }
 const ask = (sw, msg) => new Promise((res) => { const ch = new MessageChannel(); ch.port1.onmessage = (e) => res(e.data); sw.postMessage(msg, [ch.port2]); setTimeout(() => res(null), 60000); });
 let allTiles = [];
@@ -44,8 +32,15 @@ window.__offline = {
   mount(el) {
     if (!el) return;
     if (!swOk) { el.innerHTML = '<p class="credits">Offline use is available once the site is opened from its web address.</p>'; return; }
-    el.innerHTML = `<div class="offline-box"><div><b>Offline app</b><span class="ov">Checking…</span></div><button type="button" class="btn small">Update and save for offline</button></div>`;
-    const ov = el.querySelector('.ov'), btn = el.querySelector('button');
+    el.innerHTML = `<div class="offline-box"><div><b>Offline app</b><span class="ov">Checking…</span></div><button type="button" class="btn small" data-a="save">Update and save for offline</button></div>
+      <div class="offline-box install-box" hidden><div><b>Install as an app</b><span class="iv"></span></div><button type="button" class="btn small" data-a="install">Install app</button></div>`;
+    const ov = el.querySelector('.ov'), btn = el.querySelector('[data-a="save"]');
+    const ib = el.querySelector('.install-box'), iv = ib.querySelector('.iv'), ibtn = ib.querySelector('button');
+    if (!standalone) {
+      if (installEvt) { ib.hidden = false; iv.textContent = 'Opens full screen and works without a connection'; }
+      else if (iOS) { ib.hidden = false; iv.innerHTML = 'On iPad / iPhone: tap <b>Share</b>, then <b>Add to Home Screen</b>'; ibtn.hidden = true; }
+      ibtn.addEventListener('click', async () => { if (!installEvt) return; installEvt.prompt(); try { await installEvt.userChoice; } catch { /* ignore */ } installEvt = null; ib.hidden = true; });
+    }
     navigator.serviceWorker.ready.then((r) => ask(r.active, 'version')).then((v) => { ov.textContent = v ? `Saved version ${v.version}` : 'Not saved yet'; });
     btn.addEventListener('click', async () => {
       if (!navigator.onLine) { ov.textContent = 'Connect to the internet to update'; return; }
@@ -72,16 +67,6 @@ window.__offline = {
   },
 };
 
-// ---- install
-if (!standalone && !LS.get('altum-install-hide')) {
-  const hide = () => LS.set('altum-install-hide', '1');
-  addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    const p = pill('Use this presentation offline: <button type="button" class="pwa-btn" data-a="i">Install app</button>', { '[data-a="i"]': () => e.prompt() });
-    p.querySelector('.pwa-x').addEventListener('click', hide);
-  });
-  if (iOS && swOk) setTimeout(() => {
-    const p = pill('To use offline on this iPad/iPhone: tap <b>Share</b> then <b>Add to Home Screen</b>.');
-    p.querySelector('.pwa-x').addEventListener('click', hide);
-  }, 4000);
-}
+// ---- install: the browser's install offer is kept for the button in the About box (no pop-up)
+let installEvt = null;
+addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); installEvt = e; document.querySelectorAll('.install-box').forEach((b) => { b.hidden = false; b.querySelector('.iv').textContent = 'Opens full screen and works without a connection'; b.querySelector('button').hidden = false; }); });
