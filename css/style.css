@@ -748,3 +748,13 @@ body.presenting .fb-btn:hover, body.presenting .fb-btn:focus-visible { opacity: 
 .cal-set { border: 0; border-radius: 10px; background: #e9973a; color: #10202a; padding: 11px 16px; font-size: 16px; font-weight: 700; width: 100%; }
 .aimer.aiming .aim-card { top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); }
 .aim-x[hidden] { display: none; }
+/* calibration: clear picture, outline only */
+body.see-outline #labels, body.see-outline .bottom-stack, body.see-outline .gps-chip { visibility: hidden; }
+.cal-best { display: flex; gap: 10px; align-items: center; width: 100%; border: 2px solid #e9973a; border-radius: 12px; background: rgba(233,151,58,.16); color: #fff; padding: 8px; text-align: left; font-size: 13px; line-height: 1.35; margin: 4px 0 8px; }
+.cal-best img { width: 96px; height: 75px; object-fit: cover; border-radius: 8px; flex: none; }
+.cal-best b { display: block; font-size: 15px; margin-bottom: 2px; }
+.cal-row { display: flex; gap: 8px; } .cal-row button { flex: 1; border: 0; border-radius: 10px; padding: 11px; font-size: 15px; font-weight: 700; }
+.cal-again { background: rgba(238,245,247,.15); color: #fff; } .cal-done { background: #e9973a; color: #10202a; }
+.aimer.tuning { pointer-events: none; } .aimer.tuning .aim-card { pointer-events: auto; }
+.aimer.aiming .aim-card { padding: 10px 12px; } .aimer.aiming .aim-card p { margin-bottom: 8px; }
+.onsite-bar [data-o="see"][hidden] { display: none; }
