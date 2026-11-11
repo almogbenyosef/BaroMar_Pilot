@@ -553,7 +553,8 @@ body.panel-open .panel-tab, body.presenting .panel-tab { display: none; }
 .cap-in::before, .cap-in::after { position: absolute; top: 50%; transform: translateY(-50%); font-size: 26px; color: rgba(238,245,247,.45); opacity: 0; transition: opacity 200ms ease; pointer-events: none; }
 .cap-in::before { content: "‹"; left: 8px; } .cap-in::after { content: "›"; right: 8px; }
 
-@media (min-width: 821px) { .bom { top: calc(var(--top) + 14px); bottom: auto; left: 40px; } }
+/* parts list: under the PROTEAS switch (never over it), and scrolls if the screen is short */
+@media (min-width: 821px) { .bom { top: calc(var(--top) + 60px); bottom: auto; left: 40px; max-height: calc(100dvh - var(--top) - 60px - var(--stack-h, 260px) - 18px); overflow: auto; } }
 
 /* the caption box itself takes taps (its wrapper lets touches through to the 3D view) */
 .caption .cap-in, .caption .cap-foot { pointer-events: auto; }
@@ -721,3 +722,29 @@ body.presenting .fb-btn:hover, body.presenting .fb-btn:focus-visible { opacity: 
   .fb-who { grid-template-columns: 1fr; }
   .fb-shot img { max-height: 26dvh; }
 }
+
+/* ---------- on-site: aim at a landmark to set the direction ---------- */
+.aimer { position: fixed; inset: 0; z-index: 26; pointer-events: none; }
+.aimer[hidden] { display: none; }
+.aim-x { position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 0 2px rgba(7,37,54,.6), inset 0 0 0 2px rgba(7,37,54,.6); }
+.aim-x i { position: absolute; background: #ff7a3c; }
+.aim-x i:first-child { left: 50%; top: -14px; bottom: -14px; width: 2px; margin-left: -1px; }
+.aim-x i:last-child { top: 50%; left: -14px; right: -14px; height: 2px; margin-top: -1px; }
+.aim-card { position: absolute; left: 50%; top: calc(var(--top) + 60px); transform: translateX(-50%); width: min(420px, calc(100vw - 24px)); background: rgba(7,37,54,.9); border: 1px solid var(--glass-line); border-radius: 14px; padding: 12px; color: #fff; pointer-events: auto; text-align: center; }
+.aim-card p { margin: 0 0 8px; font-size: 14px; }
+.aim-list { display: grid; gap: 6px; }
+.aim-list button { border: 0; border-radius: 10px; background: var(--brand); color: #fff; padding: 10px 12px; font-size: 15px; font-weight: 600; }
+.aim-x-close { margin-top: 8px; border: 0; background: none; color: rgba(238,245,247,.8); font-size: 13px; text-decoration: underline; }
+.cal-wrap { position: relative; margin: 6px auto 8px; width: min(170px, 60%); }
+.cal-plan { display: block; width: 100%; height: auto; }
+.cal-c { position: absolute; transform: translate(-50%, -50%); width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; background: #1a8fd1; color: #fff; font-weight: 700; font-size: 12px; padding: 0; }
+.cal-c.near, .cal-names .near { background: #e9973a; color: #10202a; }
+.cal-names { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.cal-names button { border: 0; border-radius: 10px; background: rgba(238,245,247,.12); color: #fff; padding: 8px; font-size: 13px; text-align: left; }
+.cal-names b { display: block; font-size: 14px; }
+.cal-more { margin-top: 8px; font-size: 13px; color: rgba(238,245,247,.85); text-align: left; }
+.cal-more summary { cursor: pointer; }
+.cal-more .aim-list { margin-top: 6px; }
+.cal-set { border: 0; border-radius: 10px; background: #e9973a; color: #10202a; padding: 11px 16px; font-size: 16px; font-weight: 700; width: 100%; }
+.aimer.aiming .aim-card { top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); }
+.aim-x[hidden] { display: none; }
