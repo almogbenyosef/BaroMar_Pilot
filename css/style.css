@@ -758,3 +758,15 @@ body.see-outline #labels, body.see-outline .bottom-stack, body.see-outline .gps-
 .aimer.tuning { pointer-events: none; } .aimer.tuning .aim-card { pointer-events: auto; }
 .aimer.aiming .aim-card { padding: 10px 12px; } .aimer.aiming .aim-card p { margin-bottom: 8px; }
 .onsite-bar [data-o="see"][hidden] { display: none; }
+/* installed app on iPad/iPhone: fill the whole screen (see VH() in main.js) */
+html.ios-app, html.ios-app body { height: var(--vh, 100%); min-height: 100%; }
+html.ios-app #scene, html.ios-app #labels > div { height: var(--vh, 100%) !important; }
+/* presentation: tap the left / right edge for the previous / next slide */
+.dk-edge { position: absolute; top: calc(var(--top) + 8px); bottom: 76px; width: 13vw; min-width: 44px; max-width: 120px; border: 0; background: none; pointer-events: auto; color: #fff; font-size: 44px; line-height: 1; padding: 0; -webkit-tap-highlight-color: transparent; }
+.dk-edge-l { left: 0; } .dk-edge-r { right: 0; }
+.dk-edge span { opacity: 0; transition: opacity 200ms ease; text-shadow: 0 2px 10px rgba(3,20,30,.6); }
+@media (hover: hover) and (pointer: fine) { .dk-edge { cursor: pointer; } .dk-edge:hover span { opacity: .75; } }
+.dk-edge:active span { opacity: .9; }
+.cal-mini { position: relative; width: 70px; flex: none; }
+.cal-mini svg { width: 100%; height: auto; display: block; }
+.cal-mini i { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: #e9973a; border: 2px solid #fff; }
