@@ -841,3 +841,6 @@ html.ios-app #scene, html.ios-app #labels > div { height: var(--vh, 100%) !impor
 }
 .dk-n { white-space: nowrap; }
 @media (max-width: 480px) { .dk-nav .dk-deck, .dk-nav .dk-pdf { padding: 0 8px; font-size: 11px; } }
+/* lifted tags (declutterTags): moved up on a longer leader so they do not cover each other */
+.stag { margin-top: calc(-1 * var(--lift, 0px)); }
+.stag::after { height: calc(12px + var(--lift, 0px)); }
