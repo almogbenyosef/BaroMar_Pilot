@@ -844,3 +844,11 @@ html.ios-app #scene, html.ios-app #labels > div { height: var(--vh, 100%) !impor
 /* lifted tags (declutterTags): moved up on a longer leader so they do not cover each other */
 .stag { margin-top: calc(-1 * var(--lift, 0px)); }
 .stag::after { height: calc(12px + var(--lift, 0px)); }
+/* three-part points (a short heading and one line under it), e.g. "What the pilot will prove" */
+.dk-p li.pt2 { display: flex; gap: 12px; align-items: flex-start; max-width: 620px; padding: 10px 14px; }
+.dk-p li.pt2 i { flex: none; width: 28px; height: 28px; border-radius: 50%; background: var(--brand); color: #fff; font-style: normal; font-weight: 700; font-size: 15px; display: grid; place-items: center; }
+.dk-p li.pt2 b { display: block; font-family: var(--font-c); font-weight: 600; font-size: 1.25em; line-height: 1.1; margin-bottom: 2px; }
+.dk-p li.pt2 span { font-weight: 400; }
+.deck[data-layout="top"] .dk-p:has(.pt2) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: min(1100px, 88vw); }
+@media (max-width: 820px) { .deck[data-layout="top"] .dk-p:has(.pt2) { grid-template-columns: 1fr; } }
+.deck[data-layout="top"] .dk-card:has(.pt2) { max-width: min(1100px, 88vw); }
