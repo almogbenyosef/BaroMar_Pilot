@@ -932,3 +932,26 @@ body:not(.visiting) .vs-spot { display: none; }
 @media (max-width: 820px) { .vs-card { left: 12px; right: 12px; width: auto; bottom: 12px; padding: 14px 16px 10px; } .visit[dir="rtl"] .vs-card { right: 12px; } .vs-p { font-size: 15px; } .vs-lang button { padding: 7px 10px; } }
 @media (prefers-reduced-motion: reduce) { .vs-spot.next { animation: none; } .vs-hint { animation: none; opacity: 0; } }
 @media (max-width: 600px) { .float-tools { flex-wrap: wrap; justify-content: center; row-gap: 6px; } .float-explode { padding: 6px 12px 6px 10px; font-size: 13px; } }
+/* slide 12: the panel ends just under the photos instead of reaching down to the presentation bar */
+.deck[data-layout="split"] .dk-card { bottom: auto; max-height: calc(100% - var(--top) - 100px); }
+
+/* ---------- Take control: the visitor steers the swimmer / the worker ---------- */
+body.playing .topbar .topnav, body.playing .ruler, body.playing .minimap, body.playing .process-bar, body.playing .bottom-stack, body.playing .site-toggle,
+body.playing .panel, body.playing .panel-tab, body.playing .tour-hud, body.playing .bom, body.playing #labels .pin, body.playing .depth-tag, body.playing .float-tools { display: none !important; }
+.play-ui { position: fixed; inset: 0; z-index: 31; pointer-events: none; }
+.play-ui[hidden] { display: none; }
+.pl-x { position: absolute; top: calc(var(--top) + 10px); right: max(16px, env(safe-area-inset-right, 0px)); width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--glass-line); background: rgba(7,37,54,.8); color: #fff; font-size: 24px; pointer-events: auto; }
+.pl-hint { position: absolute; left: 50%; bottom: max(24px, env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); margin: 0; padding: 8px 16px; border-radius: 999px; background: rgba(7,37,54,.72); color: #fff; font-size: 14px; white-space: nowrap; }
+.pl-stick { position: absolute; left: max(28px, env(safe-area-inset-left, 0px)); bottom: max(28px, env(safe-area-inset-bottom, 0px)); width: 132px; height: 132px; border-radius: 50%; background: rgba(7,37,54,.45); border: 2px solid rgba(238,245,247,.35); pointer-events: auto; touch-action: none; display: none; }
+.pl-stick i { position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; background: rgba(238,245,247,.85); box-shadow: 0 4px 14px rgba(3,20,30,.35); }
+.pl-ud { position: absolute; right: max(28px, env(safe-area-inset-right, 0px)); bottom: max(36px, env(safe-area-inset-bottom, 0px)); display: none; flex-direction: column; gap: 12px; pointer-events: auto; }
+.pl-ud button { width: 64px; height: 64px; border-radius: 50%; border: 2px solid rgba(238,245,247,.35); background: rgba(7,37,54,.6); color: #fff; font-size: 22px; touch-action: none; }
+.play-ui[data-where="station"] .pl-ud { display: none !important; }
+@media (pointer: coarse) { .pl-stick { display: block; } .pl-ud { display: flex; } .pl-hint { display: none; } }
+.float-play { background: rgba(26,143,209,.85); color: #fff; border-color: transparent; }
+/* hover / tap label on a part */
+.hover-tip { position: fixed; z-index: 40; max-width: 260px; padding: 8px 11px; border-radius: 10px; background: rgba(7,37,54,.92); border: 1px solid var(--glass-line); color: #fff; font-size: 13px; line-height: 1.35; pointer-events: none; box-shadow: 0 6px 18px rgba(3,20,30,.35); }
+.hover-tip[hidden] { display: none; }
+.hover-tip b { display: block; font-size: 14px; margin-bottom: 2px; }
+.hover-tip span { color: rgba(238,245,247,.82); }
+body.presenting .hover-tip, body.visiting .hover-tip, body.playing .hover-tip { display: none; }
